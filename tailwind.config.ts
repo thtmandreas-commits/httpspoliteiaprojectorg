@@ -57,6 +57,22 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        node: {
+          ai: "hsl(var(--node-ai))",
+          labor: "hsl(var(--node-labor))",
+          demographic: "hsl(var(--node-demographic))",
+          fiscal: "hsl(var(--node-fiscal))",
+          capital: "hsl(var(--node-capital))",
+        },
+        status: {
+          stable: "hsl(var(--status-stable))",
+          stressed: "hsl(var(--status-stressed))",
+          critical: "hsl(var(--status-critical))",
+        },
+        flow: {
+          accelerating: "hsl(var(--flow-accelerating))",
+          stabilizing: "hsl(var(--flow-stabilizing))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
