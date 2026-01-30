@@ -1,5 +1,4 @@
-import { AggregatedSignal } from '@/types/signals';
-import { signalExamples } from '@/data/signalData';
+import { AggregatedSignal, signalCategoryMeta, signalDomains, SignalCategory } from '@/types/signals';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { 
@@ -68,11 +67,9 @@ function TrendBadge({ trend }: { trend: 'strengthening' | 'weakening' | 'holding
 }
 
 function SignalCard({ signal }: { signal: AggregatedSignal }) {
-  const [showExamples, setShowExamples] = useState(false);
-  const examples = signalExamples[signal.category] || [];
-  
   const confidenceLabel = signal.confidence > 0.7 ? 'High' : 
                           signal.confidence > 0.4 ? 'Medium' : 'Low';
+  const meta = signalCategoryMeta[signal.category];
   
   return (
     <Card className="overflow-hidden">
@@ -90,47 +87,67 @@ function SignalCard({ signal }: { signal: AggregatedSignal }) {
               <span>{signal.signalCount} signals</span>
               <span>•</span>
               <span>{confidenceLabel} confidence</span>
+              {!meta.isAccelerating && (
+                <>
+                  <span>•</span>
+                  <span className="text-flow-stabilizing">Stabilizing</span>
+                </>
+              )}
             </div>
           </div>
           <DirectionIndicator direction={signal.netDirection} confidence={signal.confidence} />
         </div>
-        
-        {examples.length > 0 && (
-          <div className="mt-2 pt-2 border-t">
-            <button
-              onClick={() => setShowExamples(!showExamples)}
-              className="text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              {showExamples ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              Illustrative patterns
-            </button>
-            {showExamples && (
-              <ul className="mt-1.5 space-y-1 text-[10px] text-muted-foreground italic">
-                {examples.slice(0, 2).map((ex, i) => (
-                  <li key={i} className="flex items-start gap-1">
-                    <span className="text-muted-foreground/50">•</span>
-                    {ex}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
       </CardContent>
     </Card>
   );
 }
 
+function DomainSection({ 
+  label, 
+  signals 
+}: { 
+  label: string; 
+  signals: AggregatedSignal[];
+}) {
+  const [expanded, setExpanded] = useState(true);
+  const activeSignals = signals.filter(s => s.signalCount > 0);
+  
+  if (activeSignals.length === 0) return null;
+  
+  return (
+    <div className="mb-3">
+      <button 
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 hover:text-foreground transition-colors"
+      >
+        {expanded ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+        {label}
+      </button>
+      {expanded && (
+        <div className="space-y-2">
+          {activeSignals.map(signal => (
+            <SignalCard key={signal.category} signal={signal} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SignalPanel({ aggregatedSignals, loopPressure, loopPressureTrend }: SignalPanelProps) {
   const activeSigs = aggregatedSignals.filter(s => s.signalCount > 0);
-  const accelerating = activeSigs.filter(s => s.netDirection > 0.2);
-  const stabilizing = activeSigs.filter(s => s.netDirection < -0.2);
+  const accelerating = activeSigs.filter(s => s.netDirection > 0.2 && signalCategoryMeta[s.category].isAccelerating);
+  const stabilizing = activeSigs.filter(s => !signalCategoryMeta[s.category].isAccelerating && s.netDirection > 0.2);
   
   const pressurePercent = Math.round(loopPressure * 100);
   const pressureLevel = loopPressure > 0.65 ? 'Elevated' : 
                         loopPressure > 0.45 ? 'Moderate' : 'Low';
   const pressureColor = loopPressure > 0.65 ? 'text-flow-accelerating' : 
                         loopPressure > 0.45 ? 'text-status-stressed' : 'text-flow-stabilizing';
+  
+  // Group signals by domain
+  const getDomainSignals = (categoryList: SignalCategory[]) => 
+    aggregatedSignals.filter(s => categoryList.includes(s.category));
   
   return (
     <div className="space-y-4">
@@ -148,7 +165,7 @@ export function SignalPanel({ aggregatedSignals, loopPressure, loopPressureTrend
                 {pressureLevel}
               </div>
               <div className="text-xs text-muted-foreground">
-                Loop pressure at {pressurePercent}%
+                Loop pressure
               </div>
             </div>
             <div className="text-right">
@@ -203,18 +220,22 @@ export function SignalPanel({ aggregatedSignals, loopPressure, loopPressureTrend
           {accelerating.length} accelerating
         </span>
         <span className="px-2 py-1 rounded-full bg-flow-stabilizing/10 text-flow-stabilizing">
-          {stabilizing.length} stabilizing
+          {stabilizing.length} adapting
         </span>
         <span className="px-2 py-1 rounded-full bg-muted text-muted-foreground">
           {activeSigs.length - accelerating.length - stabilizing.length} neutral
         </span>
       </div>
       
-      {/* Individual Signals */}
-      <div className="space-y-2">
-        <h4 className="text-xs font-medium text-muted-foreground">Signal Categories</h4>
-        {activeSigs.map(signal => (
-          <SignalCard key={signal.category} signal={signal} />
+      {/* Signals by Domain */}
+      <div>
+        <h4 className="text-xs font-medium text-muted-foreground mb-3">Signal Categories</h4>
+        {Object.entries(signalDomains).map(([key, domain]) => (
+          <DomainSection
+            key={key}
+            label={domain.label}
+            signals={getDomainSignals(domain.categories)}
+          />
         ))}
       </div>
       

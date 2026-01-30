@@ -5,78 +5,93 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-// Signal classification keywords
-const signalClassifiers = {
-  automation_adoption: {
-    keywords: ['ai', 'artificial intelligence', 'robot', 'automat', 'machine learning', 'gpt', 'chatbot', 'algorithm', 'neural', 'deep learning'],
-    direction: 'increasing' as const,
-  },
-  labor_demand: {
-    keywords: ['layoff', 'job cut', 'unemployment', 'hiring freeze', 'workforce reduction', 'downsizing', 'redundanc'],
-    direction: 'decreasing' as const,
-  },
-  labor_demand_positive: {
-    keywords: ['hiring', 'job growth', 'employment rise', 'new jobs', 'recruitment surge'],
-    direction: 'increasing' as const,
-    category: 'labor_demand' as const,
-  },
-  capital_efficiency: {
-    keywords: ['profit', 'margin', 'productivity', 'efficiency', 'shareholder', 'dividend', 'buyback', 'earnings'],
-    direction: 'increasing' as const,
-  },
-  fiscal_pressure: {
-    keywords: ['deficit', 'debt', 'pension', 'social security', 'medicare', 'government spending', 'budget', 'fiscal'],
-    direction: 'increasing' as const,
-  },
-  demographic_shift: {
-    keywords: ['birth rate', 'fertility', 'aging population', 'demographic', 'population decline', 'elderly', 'retirement age'],
-    direction: 'increasing' as const,
-  },
-  income_distribution: {
-    keywords: ['inequality', 'wealth gap', 'billionaire', 'top 1%', 'income disparity', 'wage stagnation', 'wealth concentration'],
-    direction: 'increasing' as const,
-  },
-  consumption_patterns: {
-    keywords: ['consumer spending', 'retail sales', 'consumer confidence', 'purchasing', 'consumption'],
-    direction: 'decreasing' as const,
-  },
-  workforce_participation: {
-    keywords: ['labor force', 'workforce participation', 'early retirement', 'disability claim', 'not in labor force'],
-    direction: 'decreasing' as const,
-  },
-};
+// Fixed 12-category signal taxonomy
+type SignalCategory = 
+  | 'capital_labor_decoupling'
+  | 'automation_substitution'
+  | 'wage_compression'
+  | 'family_formation_friction'
+  | 'fertility_decline'
+  | 'dependency_ratio_stress'
+  | 'tax_base_erosion'
+  | 'welfare_system_strain'
+  | 'policy_paralysis'
+  | 'legitimacy_erosion'
+  | 'redistribution_experimentation'
+  | 'structural_adaptation';
 
-// Affected nodes mapping
-const categoryNodes: Record<string, string[]> = {
-  automation_adoption: ['ai', 'labor'],
-  labor_demand: ['labor', 'income'],
-  capital_efficiency: ['capital', 'ai'],
-  fiscal_pressure: ['fiscal', 'aging'],
-  demographic_shift: ['fertility', 'aging'],
-  income_distribution: ['income', 'consumption', 'capital'],
-  consumption_patterns: ['consumption', 'fiscal'],
-  workforce_participation: ['labor', 'aging', 'fiscal'],
+// Keyword patterns for signal classification
+// Headlines are ephemeral - classified and immediately discarded
+const signalClassifiers: Record<SignalCategory, {
+  keywords: string[];
+  affectedNodes: string[];
+}> = {
+  capital_labor_decoupling: {
+    keywords: ['profit margin', 'shareholder return', 'capital gains', 'dividend', 'buyback', 'wealth gap', 'top 1%', 'billionaire', 'stock surge'],
+    affectedNodes: ['capital', 'income']
+  },
+  automation_substitution: {
+    keywords: ['ai replace', 'robot', 'automate', 'machine learning', 'chatgpt', 'artificial intelligence', 'autonomous', 'gpt', 'neural', 'algorithm'],
+    affectedNodes: ['ai', 'labor']
+  },
+  wage_compression: {
+    keywords: ['wage stagnant', 'salary cut', 'pay freeze', 'income decline', 'real wage', 'purchasing power', 'minimum wage', 'wage gap'],
+    affectedNodes: ['income', 'consumption']
+  },
+  family_formation_friction: {
+    keywords: ['housing afford', 'rent crisis', 'marriage rate', 'young adult', 'cost of living', 'student debt', 'childcare cost', 'housing cost'],
+    affectedNodes: ['fertility', 'consumption']
+  },
+  fertility_decline: {
+    keywords: ['birth rate', 'fertility', 'population decline', 'baby bust', 'childless', 'demographic decline', 'below replacement'],
+    affectedNodes: ['fertility', 'aging']
+  },
+  dependency_ratio_stress: {
+    keywords: ['aging population', 'elderly care', 'pension crisis', 'retirement age', 'dependency ratio', 'working age', 'retiree'],
+    affectedNodes: ['aging', 'fiscal']
+  },
+  tax_base_erosion: {
+    keywords: ['tax revenue', 'fiscal deficit', 'tax base', 'corporate tax', 'tax evasion', 'offshore', 'budget shortfall'],
+    affectedNodes: ['fiscal', 'income']
+  },
+  welfare_system_strain: {
+    keywords: ['social security', 'medicare', 'welfare cut', 'benefit reduction', 'entitlement', 'safety net', 'pension fund'],
+    affectedNodes: ['fiscal', 'aging']
+  },
+  policy_paralysis: {
+    keywords: ['gridlock', 'partisan', 'reform fail', 'legislation stall', 'congress block', 'political deadlock', 'veto'],
+    affectedNodes: ['fiscal', 'labor']
+  },
+  legitimacy_erosion: {
+    keywords: ['trust decline', 'institution', 'approval rating', 'protest', 'discontent', 'populist', 'anti-establishment', 'distrust'],
+    affectedNodes: ['consumption', 'fertility']
+  },
+  redistribution_experimentation: {
+    keywords: ['universal basic', 'ubi', 'wealth tax', 'guaranteed income', 'pilot program', 'social dividend', 'basic income'],
+    affectedNodes: ['income', 'capital']
+  },
+  structural_adaptation: {
+    keywords: ['reform pass', 'policy success', 'breakthrough', 'bipartisan', 'innovation policy', 'retraining program', 'skills initiative'],
+    affectedNodes: ['labor', 'fiscal']
+  }
 };
 
 interface RSSItem {
   title: string;
   description?: string;
-  pubDate?: string;
-  link?: string;
 }
 
 interface ClassifiedSignal {
   id: string;
-  category: string;
+  category: SignalCategory;
   direction: 'increasing' | 'decreasing' | 'stable';
   strength: 'weak' | 'moderate' | 'strong';
   timestamp: number;
   affectedNodes: string[];
   weight: number;
-  sourceHint?: string; // Abstract hint, not the actual headline
 }
 
-// Parse RSS XML to extract items
+// Parse RSS XML to extract items (content is ephemeral)
 function parseRSS(xml: string): RSSItem[] {
   const items: RSSItem[] = [];
   const itemRegex = /<item[^>]*>([\s\S]*?)<\/item>/gi;
@@ -84,18 +99,13 @@ function parseRSS(xml: string): RSSItem[] {
   
   while ((match = itemRegex.exec(xml)) !== null) {
     const itemContent = match[1];
-    
     const titleMatch = /<title[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/title>/i.exec(itemContent);
     const descMatch = /<description[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/description>/i.exec(itemContent);
-    const pubDateMatch = /<pubDate[^>]*>(.*?)<\/pubDate>/i.exec(itemContent);
-    const linkMatch = /<link[^>]*>(.*?)<\/link>/i.exec(itemContent);
     
     if (titleMatch) {
       items.push({
         title: titleMatch[1].replace(/<[^>]*>/g, '').trim(),
         description: descMatch ? descMatch[1].replace(/<[^>]*>/g, '').trim() : undefined,
-        pubDate: pubDateMatch ? pubDateMatch[1].trim() : undefined,
-        link: linkMatch ? linkMatch[1].trim() : undefined,
       });
     }
   }
@@ -103,41 +113,41 @@ function parseRSS(xml: string): RSSItem[] {
   return items;
 }
 
-// Classify a headline into signal categories
-function classifyHeadline(title: string, description?: string): ClassifiedSignal | null {
-  const text = `${title} ${description || ''}`.toLowerCase();
+// Classify text into signal category (text discarded after classification)
+function classifyContent(text: string): { category: SignalCategory; strength: 'weak' | 'moderate' | 'strong' } | null {
+  const lowerText = text.toLowerCase();
+  let bestMatch: { category: SignalCategory; score: number } | null = null;
   
-  for (const [key, config] of Object.entries(signalClassifiers)) {
-    const matchCount = config.keywords.filter(kw => text.includes(kw.toLowerCase())).length;
-    
-    if (matchCount > 0) {
-      const category = (config as any).category || key;
-      const strength = matchCount >= 3 ? 'strong' : matchCount >= 2 ? 'moderate' : 'weak';
-      const weight = strength === 'strong' ? 0.9 : strength === 'moderate' ? 0.6 : 0.3;
-      
-      // Create abstract hint (not the actual headline)
-      const sourceHint = `Signal detected in ${category.replace(/_/g, ' ')} category`;
-      
-      return {
-        id: `sig_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        category,
-        direction: config.direction,
-        strength,
-        timestamp: Date.now(),
-        affectedNodes: categoryNodes[category] || [],
-        weight,
-        sourceHint,
-      };
+  for (const [category, config] of Object.entries(signalClassifiers)) {
+    const matchCount = config.keywords.filter(kw => lowerText.includes(kw)).length;
+    if (matchCount > 0 && (!bestMatch || matchCount > bestMatch.score)) {
+      bestMatch = { category: category as SignalCategory, score: matchCount };
     }
   }
   
-  return null;
+  if (!bestMatch) return null;
+  
+  const strength = bestMatch.score >= 3 ? 'strong' : bestMatch.score >= 2 ? 'moderate' : 'weak';
+  return { category: bestMatch.category, strength };
 }
 
-// Fetch RSS feeds from multiple sources
+// Infer direction from text patterns
+function inferDirection(text: string): 'increasing' | 'decreasing' | 'stable' {
+  const lowerText = text.toLowerCase();
+  const increasingPatterns = ['rise', 'increase', 'grow', 'surge', 'spike', 'jump', 'expand', 'accelerat', 'boom', 'soar'];
+  const decreasingPatterns = ['fall', 'decline', 'drop', 'shrink', 'contract', 'slow', 'cut', 'reduce', 'crash', 'plunge'];
+  
+  const hasIncreasing = increasingPatterns.some(p => lowerText.includes(p));
+  const hasDecreasing = decreasingPatterns.some(p => lowerText.includes(p));
+  
+  if (hasIncreasing && !hasDecreasing) return 'increasing';
+  if (hasDecreasing && !hasIncreasing) return 'decreasing';
+  return 'stable';
+}
+
+// Fetch RSS feeds
 async function fetchRSSFeeds(): Promise<RSSItem[]> {
   const feeds = [
-    // Business/Economy feeds
     'https://feeds.bbci.co.uk/news/business/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',
     'https://feeds.reuters.com/reuters/businessNews',
@@ -148,15 +158,13 @@ async function fetchRSSFeeds(): Promise<RSSItem[]> {
   for (const feedUrl of feeds) {
     try {
       const response = await fetch(feedUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; SignalEngine/1.0)',
-        },
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SignalEngine/1.0)' },
       });
       
       if (response.ok) {
         const xml = await response.text();
         const items = parseRSS(xml);
-        allItems.push(...items.slice(0, 10)); // Limit per feed
+        allItems.push(...items.slice(0, 10));
       }
     } catch (error) {
       console.error(`Failed to fetch ${feedUrl}:`, error);
@@ -167,7 +175,6 @@ async function fetchRSSFeeds(): Promise<RSSItem[]> {
 }
 
 serve(async (req) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -177,29 +184,38 @@ serve(async (req) => {
     const items = await fetchRSSFeeds();
     console.log(`Fetched ${items.length} items`);
     
-    // Classify headlines into signals
+    // Classify into signals (raw content discarded immediately)
     const signals: ClassifiedSignal[] = [];
-    const seenCategories = new Set<string>();
     
     for (const item of items) {
-      const signal = classifyHeadline(item.title, item.description);
+      const text = `${item.title} ${item.description || ''}`;
+      const classification = classifyContent(text);
       
-      if (signal) {
-        // Limit signals per category to avoid over-representation
-        const categoryCount = signals.filter(s => s.category === signal.category).length;
-        if (categoryCount < 3) {
-          signals.push(signal);
-          seenCategories.add(signal.category);
-        }
-      }
+      if (!classification) continue;
+      
+      // Limit signals per category
+      const categoryCount = signals.filter(s => s.category === classification.category).length;
+      if (categoryCount >= 3) continue;
+      
+      const config = signalClassifiers[classification.category];
+      
+      signals.push({
+        id: `sig_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        category: classification.category,
+        direction: inferDirection(text),
+        strength: classification.strength,
+        timestamp: Date.now(),
+        affectedNodes: config.affectedNodes,
+        weight: classification.strength === 'strong' ? 0.9 : 
+                classification.strength === 'moderate' ? 0.6 : 0.3
+      });
     }
     
-    // Aggregate signals by category
+    // Aggregate by category
     const aggregated: Record<string, {
       count: number;
       avgWeight: number;
       dominantDirection: 'increasing' | 'decreasing' | 'stable';
-      signals: ClassifiedSignal[];
     }> = {};
     
     for (const signal of signals) {
@@ -208,17 +224,11 @@ serve(async (req) => {
           count: 0,
           avgWeight: 0,
           dominantDirection: signal.direction,
-          signals: [],
         };
       }
-      aggregated[signal.category].count++;
-      aggregated[signal.category].signals.push(signal);
-    }
-    
-    // Calculate averages
-    for (const category of Object.keys(aggregated)) {
-      const catSignals = aggregated[category].signals;
-      aggregated[category].avgWeight = catSignals.reduce((sum, s) => sum + s.weight, 0) / catSignals.length;
+      const cat = aggregated[signal.category];
+      cat.avgWeight = (cat.avgWeight * cat.count + signal.weight) / (cat.count + 1);
+      cat.count++;
     }
     
     const result = {
@@ -229,6 +239,7 @@ serve(async (req) => {
       categoriesFound: Object.keys(aggregated).length,
       signals,
       aggregated,
+      privacy: 'No raw headlines stored. All content classified and immediately discarded.'
     };
     
     console.log(`Classified ${signals.length} signals across ${Object.keys(aggregated).length} categories`);
@@ -241,7 +252,9 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        signals: [],
+        aggregated: {}
       }),
       { 
         status: 500, 

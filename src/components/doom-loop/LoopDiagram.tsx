@@ -2,14 +2,16 @@ import { useMemo, useState } from 'react';
 import { LoopNode, LoopConnection } from '@/types/simulation';
 import { LoopNodeComponent } from './LoopNode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AggregatedSignal, signalCategoryMeta } from '@/types/signals';
 
 interface LoopDiagramProps {
   nodes: LoopNode[];
   connections: LoopConnection[];
   className?: string;
+  aggregatedSignals?: AggregatedSignal[];
 }
 
-export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps) {
+export function LoopDiagram({ nodes, connections, className, aggregatedSignals = [] }: LoopDiagramProps) {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const size = 320;
   const center = size / 2;
@@ -26,6 +28,68 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
     });
     return positions;
   }, [nodes, center, radius]);
+
+  // Calculate stress levels for each node based on signals
+  const nodeStressLevels = useMemo(() => {
+    const stressMap: Record<string, number> = {};
+    
+    nodes.forEach(node => {
+      // Find signals that affect this node
+      const affectingSignals = aggregatedSignals.filter(s => 
+        s.affectedNodes.includes(node.id)
+      );
+      
+      if (affectingSignals.length === 0) {
+        stressMap[node.id] = 0;
+        return;
+      }
+      
+      // Calculate weighted stress based on signal direction and whether it's accelerating
+      let stressSum = 0;
+      let weightSum = 0;
+      
+      affectingSignals.forEach(signal => {
+        const meta = signalCategoryMeta[signal.category];
+        const weight = signal.confidence;
+        
+        if (meta.isAccelerating) {
+          // Stress signals: positive direction = more stress
+          stressSum += Math.max(0, signal.netDirection) * weight;
+        } else {
+          // Adaptation signals: positive direction = less stress
+          stressSum -= Math.max(0, signal.netDirection) * weight * 0.5;
+        }
+        weightSum += weight;
+      });
+      
+      stressMap[node.id] = weightSum > 0 
+        ? Math.max(0, Math.min(1, stressSum / weightSum)) 
+        : 0;
+    });
+    
+    return stressMap;
+  }, [nodes, aggregatedSignals]);
+
+  // Calculate uncertainty based on signal confidence
+  const nodeUncertainty = useMemo(() => {
+    const uncertaintyMap: Record<string, number> = {};
+    
+    nodes.forEach(node => {
+      const affectingSignals = aggregatedSignals.filter(s => 
+        s.affectedNodes.includes(node.id)
+      );
+      
+      if (affectingSignals.length === 0) {
+        uncertaintyMap[node.id] = 0.3; // Base uncertainty when no signals
+        return;
+      }
+      
+      const avgConfidence = affectingSignals.reduce((sum, s) => sum + s.confidence, 0) / affectingSignals.length;
+      uncertaintyMap[node.id] = 1 - avgConfidence;
+    });
+    
+    return uncertaintyMap;
+  }, [nodes, aggregatedSignals]);
 
   const selectedNodeData = nodes.find(n => n.id === selectedNode);
 
@@ -60,7 +124,6 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
             const to = nodePositions[conn.to];
             if (!from || !to) return null;
 
-            // Calculate curved path
             const midX = (from.x + to.x) / 2;
             const midY = (from.y + to.y) / 2;
             const dx = to.x - from.x;
@@ -70,6 +133,10 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
             const perpY = dx / Math.sqrt(dx * dx + dy * dy) * curveOffset;
 
             const isHighlighted = selectedNode === conn.from || selectedNode === conn.to;
+            
+            // Connection stress based on source node stress
+            const sourceStress = nodeStressLevels[conn.from] || 0;
+            const connectionOpacity = isHighlighted ? 0.8 : 0.3 + sourceStress * 0.3;
 
             return (
               <path
@@ -77,8 +144,8 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
                 d={`M ${from.x} ${from.y} Q ${midX + perpX} ${midY + perpY} ${to.x} ${to.y}`}
                 fill="none"
                 stroke={conn.type === 'reinforcing' ? 'hsl(var(--flow-accelerating))' : 'hsl(var(--flow-stabilizing))'}
-                strokeWidth={isHighlighted ? 2 : 1}
-                strokeOpacity={isHighlighted ? 0.8 : 0.3}
+                strokeWidth={isHighlighted ? 2 : 1 + sourceStress}
+                strokeOpacity={connectionOpacity}
                 markerEnd="url(#arrowhead)"
                 className="transition-all duration-300"
               />
@@ -94,6 +161,8 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
             position={nodePositions[node.id]}
             isActive={selectedNode === node.id}
             onClick={() => setSelectedNode(selectedNode === node.id ? null : node.id)}
+            stressLevel={nodeStressLevels[node.id] || 0}
+            uncertainty={nodeUncertainty[node.id] || 0}
           />
         ))}
 
@@ -120,8 +189,18 @@ export function LoopDiagram({ nodes, connections, className }: LoopDiagramProps)
                   style={{ width: `${selectedNodeData.intensity * 100}%` }}
                 />
               </div>
-              <div className="text-xs font-mono">{Math.round(selectedNodeData.intensity * 100)}%</div>
             </div>
+            {nodeStressLevels[selectedNodeData.id] > 0 && (
+              <div className="mt-2 flex items-center gap-2">
+                <div className="text-xs text-flow-accelerating">Stress:</div>
+                <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-flow-accelerating transition-all duration-500"
+                    style={{ width: `${nodeStressLevels[selectedNodeData.id] * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

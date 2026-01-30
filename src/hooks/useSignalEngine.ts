@@ -4,11 +4,12 @@ import {
   SignalCategory, 
   AggregatedSignal, 
   SignalEngineState,
+  TimeWindowedSignal,
   signalCategoryMeta 
 } from '@/types/signals';
-import { sampleSignals } from '@/data/signalData';
+import { sampleSignals, generateTimeWindowedSignals } from '@/data/signalData';
 
-const SIGNAL_DECAY_DAYS = 7; // Signals older than this have reduced weight
+const SIGNAL_DECAY_DAYS = 7;
 
 function calculateSignalValue(signal: Signal): number {
   const directionValue = signal.direction === 'increasing' ? 1 : 
@@ -16,7 +17,6 @@ function calculateSignalValue(signal: Signal): number {
   const strengthMultiplier = signal.strength === 'strong' ? 1 : 
                              signal.strength === 'moderate' ? 0.6 : 0.3;
   
-  // Apply time decay
   const ageInDays = (Date.now() - signal.timestamp) / (86400000);
   const decayFactor = Math.max(0.2, 1 - (ageInDays / SIGNAL_DECAY_DAYS) * 0.5);
   
@@ -43,18 +43,15 @@ function aggregateSignalsByCategory(signals: Signal[]): AggregatedSignal[] {
       };
     }
     
-    // Calculate net direction
     const totalValue = categorySignals.reduce((sum, s) => sum + calculateSignalValue(s), 0);
     const netDirection = Math.max(-1, Math.min(1, totalValue / categorySignals.length));
     
-    // Calculate confidence based on signal consistency
     const directions = categorySignals.map(s => s.direction);
     const dominantDirection = directions.filter(d => d === directions[0]).length;
     const consistency = dominantDirection / categorySignals.length;
-    const volumeFactor = Math.min(1, categorySignals.length / 5); // More signals = more confidence
+    const volumeFactor = Math.min(1, categorySignals.length / 5);
     const confidence = consistency * 0.6 + volumeFactor * 0.4;
     
-    // Determine trend by comparing recent vs older signals
     const midpoint = Date.now() - 86400000 * 3;
     const recentSignals = categorySignals.filter(s => s.timestamp > midpoint);
     const olderSignals = categorySignals.filter(s => s.timestamp <= midpoint);
@@ -84,30 +81,21 @@ function aggregateSignalsByCategory(signals: Signal[]): AggregatedSignal[] {
 }
 
 function calculateLoopPressure(aggregatedSignals: AggregatedSignal[]): number {
-  // Weight signals that accelerate the doom loop positively
-  const acceleratingCategories: SignalCategory[] = [
-    'automation_adoption',
-    'capital_efficiency',
-    'fiscal_pressure',
-    'demographic_shift'
-  ];
-  
+  // Stress categories increase pressure, adaptation categories decrease it
   let pressure = 0;
   let totalWeight = 0;
   
   aggregatedSignals.forEach(signal => {
-    const isAccelerating = acceleratingCategories.includes(signal.category);
+    const meta = signalCategoryMeta[signal.category];
     const categoryWeight = signal.confidence * 0.5 + 0.5;
     
-    // For accelerating categories, positive direction increases pressure
-    // For stabilizing categories (labor_demand, consumption), negative direction increases pressure
     let contribution: number;
-    if (isAccelerating) {
+    if (meta.isAccelerating) {
+      // For stress categories, positive direction = more pressure
       contribution = signal.netDirection * categoryWeight;
-    } else if (signal.category === 'labor_demand' || signal.category === 'consumption_patterns') {
-      contribution = -signal.netDirection * categoryWeight;
     } else {
-      contribution = Math.abs(signal.netDirection) * categoryWeight * 0.5;
+      // For adaptation categories, positive direction = less pressure
+      contribution = -signal.netDirection * categoryWeight;
     }
     
     pressure += contribution;
@@ -122,6 +110,10 @@ export function useSignalEngine(initialSignals: Signal[] = sampleSignals) {
   
   const aggregatedSignals = useMemo(() => 
     aggregateSignalsByCategory(signals), [signals]
+  );
+  
+  const timeWindowedSignals = useMemo(() =>
+    generateTimeWindowedSignals(signals), [signals]
   );
   
   const loopPressure = useMemo(() => 
@@ -149,33 +141,30 @@ export function useSignalEngine(initialSignals: Signal[] = sampleSignals) {
     setSignals(prev => [newSignal, ...prev]);
   }, []);
 
-  // Add multiple live signals from external source
   const addLiveSignals = useCallback((newSignals: Signal[]) => {
     setSignals(prev => {
-      // Merge new signals, avoiding duplicates by ID
       const existingIds = new Set(prev.map(s => s.id));
       const uniqueNew = newSignals.filter(s => !existingIds.has(s.id));
       return [...uniqueNew, ...prev];
     });
   }, []);
   
-  // Get signals that affect a specific node
   const getNodeSignals = useCallback((nodeId: string) => {
     return aggregatedSignals.filter(s => s.affectedNodes.includes(nodeId));
   }, [aggregatedSignals]);
   
-  // Get intensity modifier for a node based on signals
   const getNodeIntensityModifier = useCallback((nodeId: string): number => {
     const nodeSignals = aggregatedSignals.filter(s => s.affectedNodes.includes(nodeId));
     if (nodeSignals.length === 0) return 0;
     
     const avgDirection = nodeSignals.reduce((sum, s) => sum + s.netDirection * s.confidence, 0) / nodeSignals.length;
-    return avgDirection * 0.2; // Signals modify intensity by up to ±20%
+    return avgDirection * 0.2;
   }, [aggregatedSignals]);
   
   const state: SignalEngineState = {
     signals,
     aggregatedSignals,
+    timeWindowedSignals,
     lastUpdated: Date.now(),
     loopPressure,
     loopPressureTrend
@@ -185,6 +174,7 @@ export function useSignalEngine(initialSignals: Signal[] = sampleSignals) {
     state,
     signals,
     aggregatedSignals,
+    timeWindowedSignals,
     loopPressure,
     loopPressureTrend,
     addSignal,
