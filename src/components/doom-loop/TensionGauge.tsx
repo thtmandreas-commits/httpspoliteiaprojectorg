@@ -51,8 +51,8 @@ export function TensionGauge({
   return (
     <div className={cn(
       'p-4 rounded-lg bg-card border transition-all',
-      'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_1px_3px_0_rgba(0,0,0,0.04)]',
-      level === 'critical' && 'border-status-critical/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_2px_8px_0_rgba(239,68,68,0.08)]',
+      'shadow-sm dark:shadow-none',
+      level === 'critical' && 'border-status-critical/30 shadow-md shadow-status-critical/10 dark:shadow-status-critical/20',
       level === 'stressed' && 'border-status-stressed/20',
       className
     )}>

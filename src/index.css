@@ -62,65 +62,70 @@
   }
 
   .dark {
-    --background: 220 15% 8%;
-    --foreground: 220 10% 92%;
+    /* Warm dark backgrounds for reduced harshness */
+    --background: 220 20% 7%;
+    --foreground: 40 10% 90%;
 
-    --card: 220 15% 11%;
-    --card-foreground: 220 10% 92%;
+    --card: 220 18% 10%;
+    --card-foreground: 40 10% 90%;
 
-    --popover: 220 15% 11%;
-    --popover-foreground: 220 10% 92%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 40 10% 90%;
 
-    --primary: 220 60% 55%;
+    --primary: 220 55% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 220 10% 85%;
+    --secondary: 220 15% 16%;
+    --secondary-foreground: 40 8% 80%;
 
-    --muted: 220 15% 15%;
+    --muted: 220 15% 14%;
     --muted-foreground: 220 8% 55%;
 
-    --accent: 220 15% 18%;
-    --accent-foreground: 220 10% 92%;
+    --accent: 220 15% 16%;
+    --accent-foreground: 40 10% 88%;
 
     --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 12% 20%;
-    --input: 220 12% 20%;
-    --ring: 220 60% 55%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 220 55% 58%;
 
-    /* Loop Node Colors */
-    --node-ai: 250 50% 60%;
-    --node-labor: 25 65% 55%;
-    --node-demographic: 340 55% 55%;
-    --node-fiscal: 45 75% 50%;
-    --node-capital: 160 50% 45%;
+    /* Loop Node Colors - Slightly brighter for dark mode */
+    --node-ai: 250 55% 65%;
+    --node-labor: 25 70% 58%;
+    --node-demographic: 340 60% 58%;
+    --node-fiscal: 45 80% 55%;
+    --node-capital: 160 55% 50%;
 
-    /* Status Colors */
-    --status-stable: 145 55% 45%;
-    --status-stressed: 40 75% 52%;
-    --status-critical: 0 60% 52%;
+    /* Status Colors - Enhanced visibility */
+    --status-stable: 145 55% 48%;
+    --status-stressed: 40 80% 55%;
+    --status-critical: 0 65% 55%;
 
     /* Flow Colors */
-    --flow-accelerating: 0 60% 55%;
-    --flow-stabilizing: 145 55% 45%;
+    --flow-accelerating: 0 65% 58%;
+    --flow-stabilizing: 145 55% 48%;
 
     /* Brand Colors */
-    --brand-title: 0 0% 95%;
-    --brand-subtitle: 220 10% 60%;
-    --brand-trust: 220 10% 70%;
-    --ad-placeholder: 220 15% 15%;
-    --ad-placeholder-border: 220 12% 22%;
+    --brand-title: 40 15% 92%;
+    --brand-subtitle: 220 10% 58%;
+    --brand-trust: 220 10% 65%;
+    --ad-placeholder: 220 18% 12%;
+    --ad-placeholder-border: 220 15% 20%;
 
-    --sidebar-background: 220 15% 10%;
-    --sidebar-foreground: 220 10% 85%;
-    --sidebar-primary: 220 60% 55%;
+    /* Depth cues for dark mode */
+    --depth-shadow: 220 30% 4%;
+    --depth-highlight: 220 15% 18%;
+
+    --sidebar-background: 220 18% 9%;
+    --sidebar-foreground: 40 10% 85%;
+    --sidebar-primary: 220 55% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 16%;
-    --sidebar-accent-foreground: 220 10% 85%;
-    --sidebar-border: 220 12% 20%;
-    --sidebar-ring: 220 60% 55%;
+    --sidebar-accent: 220 15% 14%;
+    --sidebar-accent-foreground: 40 10% 85%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 220 55% 58%;
   }
 }
 

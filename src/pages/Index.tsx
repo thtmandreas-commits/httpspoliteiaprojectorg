@@ -10,6 +10,7 @@ import { AboutScreen } from '@/components/doom-loop/AboutScreen';
 import { Navigation } from '@/components/doom-loop/Navigation';
 import { BrandHeader } from '@/components/doom-loop/BrandHeader';
 import { AdPlaceholder } from '@/components/doom-loop/AdPlaceholder';
+import { ThemeToggle } from '@/components/doom-loop/ThemeToggle';
 import { CountryScenario } from '@/types/simulation';
 import { Signal } from '@/types/signals';
 
@@ -51,10 +52,13 @@ const Index = () => {
   const showTrustBadge = activeTab === 'loop';
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b">
-        <div className="max-w-lg mx-auto px-4 py-3">
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b transition-colors">
+        <div className="max-w-lg mx-auto px-4 py-3 relative">
+          {/* Theme toggle - positioned absolutely */}
+          <ThemeToggle className="absolute right-4 top-1/2 -translate-y-1/2" />
+          
           {showBrandHeader ? (
             <BrandHeader showTrustBadge={showTrustBadge} />
           ) : (
