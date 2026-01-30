@@ -1,8 +1,9 @@
 export interface SimulationParams {
   aiAdoptionSpeed: number;
-  welfareLevel: number;
-  immigrationRate: number;
-  redistributionLevel: number;
+  incomeFloorRedistribution: number;
+  immigrationOpenness: number;
+  costOfLivingPressure: number;
+  stateCapacity: number;
 }
 
 export interface LoopNode {

@@ -95,7 +95,13 @@ export const countryScenarios: CountryScenario[] = [
     name: 'Japan',
     flag: '🇯🇵',
     description: 'Advanced aging, low immigration, high automation adoption',
-    params: { aiAdoptionSpeed: 75, welfareLevel: 60, immigrationRate: 10, redistributionLevel: 40 },
+    params: { 
+      aiAdoptionSpeed: 75, 
+      incomeFloorRedistribution: 50, 
+      immigrationOpenness: 10, 
+      costOfLivingPressure: 70,
+      stateCapacity: 65
+    },
     highlights: ['Oldest population globally', 'Robot density leader', 'Strict immigration policy'],
     metrics: {
       birthRateTrend: 'declining',
@@ -109,7 +115,13 @@ export const countryScenarios: CountryScenario[] = [
     name: 'South Korea',
     flag: '🇰🇷',
     description: 'Lowest fertility, rapid digitization, high inequality',
-    params: { aiAdoptionSpeed: 80, welfareLevel: 35, immigrationRate: 15, redistributionLevel: 30 },
+    params: { 
+      aiAdoptionSpeed: 80, 
+      incomeFloorRedistribution: 30, 
+      immigrationOpenness: 15, 
+      costOfLivingPressure: 85,
+      stateCapacity: 55
+    },
     highlights: ['0.7 fertility rate', 'Highest robot density', 'Youth unemployment crisis'],
     metrics: {
       birthRateTrend: 'declining',
@@ -123,7 +135,13 @@ export const countryScenarios: CountryScenario[] = [
     name: 'China',
     flag: '🇨🇳',
     description: 'Rapid aging transition, AI superpower ambitions, limited welfare',
-    params: { aiAdoptionSpeed: 85, welfareLevel: 25, immigrationRate: 5, redistributionLevel: 25 },
+    params: { 
+      aiAdoptionSpeed: 85, 
+      incomeFloorRedistribution: 25, 
+      immigrationOpenness: 5, 
+      costOfLivingPressure: 60,
+      stateCapacity: 80
+    },
     highlights: ['Demographic cliff approaching', 'AI investment surge', 'Hukou system constraints'],
     metrics: {
       birthRateTrend: 'declining',
@@ -137,7 +155,13 @@ export const countryScenarios: CountryScenario[] = [
     name: 'European Union',
     flag: '🇪🇺',
     description: 'Strong welfare, moderate automation, aging but immigration buffer',
-    params: { aiAdoptionSpeed: 55, welfareLevel: 75, immigrationRate: 45, redistributionLevel: 65 },
+    params: { 
+      aiAdoptionSpeed: 55, 
+      incomeFloorRedistribution: 70, 
+      immigrationOpenness: 55, 
+      costOfLivingPressure: 50,
+      stateCapacity: 60
+    },
     highlights: ['Strong social safety nets', 'AI regulation focus', 'Migration debates'],
     metrics: {
       birthRateTrend: 'stable',
@@ -151,7 +175,13 @@ export const countryScenarios: CountryScenario[] = [
     name: 'United States',
     flag: '🇺🇸',
     description: 'High inequality, tech leadership, immigration dependent',
-    params: { aiAdoptionSpeed: 70, welfareLevel: 40, immigrationRate: 55, redistributionLevel: 35 },
+    params: { 
+      aiAdoptionSpeed: 70, 
+      incomeFloorRedistribution: 35, 
+      immigrationOpenness: 55, 
+      costOfLivingPressure: 65,
+      stateCapacity: 50
+    },
     highlights: ['Tech sector dominance', 'Wealth concentration', 'Immigration politics'],
     metrics: {
       birthRateTrend: 'stable',
@@ -170,7 +200,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['income', 'consumption', 'fertility'],
     effectiveness: 'uncertain',
     tradeoffs: ['Fiscal cost', 'Inflation risk', 'Work incentive debates'],
-    paramEffects: { welfareLevel: 30, redistributionLevel: 25 }
+    paramEffects: { incomeFloorRedistribution: 30 }
   },
   {
     id: 'robot-tax',
@@ -179,7 +209,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['ai', 'fiscal', 'capital'],
     effectiveness: 'medium',
     tradeoffs: ['May slow innovation', 'Capital flight risk', 'Definition challenges'],
-    paramEffects: { aiAdoptionSpeed: -15, redistributionLevel: 15 }
+    paramEffects: { aiAdoptionSpeed: -15, incomeFloorRedistribution: 15 }
   },
   {
     id: 'immigration',
@@ -188,7 +218,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['aging', 'fiscal', 'labor'],
     effectiveness: 'medium',
     tradeoffs: ['Social integration', 'Brain drain from source', 'Political resistance'],
-    paramEffects: { immigrationRate: 30 }
+    paramEffects: { immigrationOpenness: 30 }
   },
   {
     id: 'pronatalist',
@@ -197,7 +227,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['fertility', 'aging'],
     effectiveness: 'low',
     tradeoffs: ['Slow to impact', 'High cost per birth', 'Doesn\'t address root causes'],
-    paramEffects: { welfareLevel: 10 }
+    paramEffects: { incomeFloorRedistribution: 10, costOfLivingPressure: -10 }
   },
   {
     id: 'retraining',
@@ -206,7 +236,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['labor', 'income'],
     effectiveness: 'low',
     tradeoffs: ['Skills mismatch', 'Age barriers', 'Pace of change too fast'],
-    paramEffects: { welfareLevel: 15 }
+    paramEffects: { stateCapacity: 10 }
   },
   {
     id: 'wealth-tax',
@@ -215,7 +245,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['capital', 'fiscal'],
     effectiveness: 'uncertain',
     tradeoffs: ['Enforcement difficulty', 'Capital flight', 'Valuation complexity'],
-    paramEffects: { redistributionLevel: 25 }
+    paramEffects: { incomeFloorRedistribution: 25 }
   },
   {
     id: 'ai-pause',
@@ -233,7 +263,7 @@ export const interventions: Intervention[] = [
     targetNodes: ['capital', 'income'],
     effectiveness: 'uncertain',
     tradeoffs: ['Implementation complexity', 'First-mover disadvantage', 'Coordination problem'],
-    paramEffects: { redistributionLevel: 35 }
+    paramEffects: { incomeFloorRedistribution: 35 }
   }
 ];
 
