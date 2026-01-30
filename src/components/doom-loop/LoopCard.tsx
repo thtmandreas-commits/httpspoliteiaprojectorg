@@ -35,16 +35,16 @@ export function LoopCard({ node, isHighlighted, onClick, stressLevel = 0 }: Loop
     ? 'ring-1 ring-status-stressed/40 bg-gradient-to-r from-status-stressed/6 to-transparent shadow-sm shadow-status-stressed/5' 
     : '';
 
-  // Depth cues for all cards - subtle inner shadow effect via border
+  // Depth cues for all cards - theme-aware
   const depthStyles = isStressed 
     ? '' // Stressed cards already have visual emphasis
-    : 'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.6),0_1px_2px_0_rgba(0,0,0,0.03)]';
+    : 'shadow-sm dark:shadow-none dark:border-border/50';
 
   return (
     <Card 
       className={cn(
         'border-l-4 cursor-pointer transition-all duration-300',
-        'hover:shadow-md hover:translate-y-[-1px]',
+        'hover:shadow-md hover:translate-y-[-1px] dark:hover:shadow-lg dark:hover:shadow-black/20',
         categoryColors[node.category],
         isHighlighted && 'ring-2 ring-primary bg-primary/5',
         stressStyles,

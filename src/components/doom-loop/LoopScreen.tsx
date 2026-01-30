@@ -90,11 +90,11 @@ export function LoopScreen({
       
       {/* Loop Cards with radial background emphasis */}
       <div className="space-y-2 relative">
-        {/* Subtle radial gradient for visual gravity */}
+        {/* Subtle radial gradient for visual gravity - theme aware */}
         <div 
-          className="absolute inset-0 -z-10 pointer-events-none"
+          className="absolute inset-0 -z-10 pointer-events-none dark:opacity-50"
           style={{
-            background: 'radial-gradient(ellipse at center top, hsl(40 20% 94% / 0.8) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center top, hsl(var(--muted)) 0%, transparent 70%)',
             transform: 'translateY(-20px)',
           }}
         />
