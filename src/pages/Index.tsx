@@ -6,6 +6,8 @@ import { CountriesScreen } from '@/components/doom-loop/CountriesScreen';
 import { InterventionsScreen } from '@/components/doom-loop/InterventionsScreen';
 import { NowScreen } from '@/components/doom-loop/NowScreen';
 import { Navigation } from '@/components/doom-loop/Navigation';
+import { BrandHeader } from '@/components/doom-loop/BrandHeader';
+import { AdPlaceholder } from '@/components/doom-loop/AdPlaceholder';
 import { CountryScenario } from '@/types/simulation';
 
 type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now';
@@ -27,20 +29,33 @@ const Index = () => {
     setActiveTab('loop');
   }, [setAllParams]);
 
+  // Show prominent branding on Loop and Now screens
+  const showBrandHeader = activeTab === 'loop' || activeTab === 'now';
+  // Show trust badge only on Loop screen (first impression)
+  const showTrustBadge = activeTab === 'loop';
+
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b">
         <div className="max-w-lg mx-auto px-4 py-3">
-          <h1 className="text-lg font-bold tracking-tight">Doom Loop</h1>
-          <p className="text-xs text-muted-foreground">
-            AI · Demographics · Economics
-          </p>
+          {showBrandHeader ? (
+            <BrandHeader showTrustBadge={showTrustBadge} />
+          ) : (
+            <div className="text-center">
+              <h1 
+                className="text-sm font-bold tracking-[0.1em] uppercase"
+                style={{ color: 'hsl(var(--brand-title))' }}
+              >
+                DOOM LOOP
+              </h1>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-lg mx-auto px-4 py-4">
+      <main className="flex-1 max-w-lg mx-auto px-4 py-4 w-full pb-24">
         {activeTab === 'loop' && (
           <div className="animate-in fade-in">
             <LoopScreen
@@ -72,11 +87,18 @@ const Index = () => {
         )}
 
         {activeTab === 'now' && (
-          <div className="animate-in fade-in">
+          <div className="animate-in fade-in space-y-4">
             <NowScreen />
+            {/* Ad placeholder in Now screen - separated from content */}
+            <AdPlaceholder variant="block" className="mt-6" />
           </div>
         )}
       </main>
+
+      {/* Ad Banner - Fixed above navigation */}
+      <div className="fixed bottom-16 left-0 right-0 z-30">
+        <AdPlaceholder variant="banner" />
+      </div>
 
       {/* Bottom Navigation */}
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
