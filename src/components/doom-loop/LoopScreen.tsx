@@ -1,6 +1,8 @@
+import { useState, useCallback } from 'react';
 import { SimulationParams, LoopNode } from '@/types/simulation';
 import { AggregatedSignal } from '@/types/signals';
 import { LoopCard } from './LoopCard';
+import { LoopConnectionLink } from './LoopConnectionLink';
 import { SensitivityToggle } from './SensitivityToggle';
 import { TensionGauge } from './TensionGauge';
 import { signalCategoryMeta } from '@/types/signals';
@@ -16,6 +18,18 @@ interface LoopScreenProps {
   signalLoopPressure?: number;
   signalPressureTrend?: 'increasing' | 'decreasing' | 'stable';
 }
+
+// Node order with their outgoing connections
+const nodeSequence = [
+  { id: 'ai', connectsTo: 'labor' },
+  { id: 'labor', connectsTo: 'income' },
+  { id: 'income', connectsTo: 'consumption' },
+  { id: 'consumption', connectsTo: 'fertility' },  // via fiscal path
+  { id: 'fertility', connectsTo: 'aging' },
+  { id: 'aging', connectsTo: 'fiscal' },
+  { id: 'fiscal', connectsTo: 'capital' },  // loops back through ai
+  { id: 'capital', connectsTo: null },  // end of main sequence
+];
 
 // Calculate node stress from signals
 function calculateNodeStress(nodeId: string, signals: AggregatedSignal[]): number {
@@ -51,6 +65,17 @@ export function LoopScreen({
   signalLoopPressure = 0,
   signalPressureTrend = 'stable'
 }: LoopScreenProps) {
+  // Track which connection panel is open (only one at a time)
+  const [openConnection, setOpenConnection] = useState<string | null>(null);
+
+  const handleConnectionToggle = useCallback((connectionKey: string) => {
+    setOpenConnection(prev => prev === connectionKey ? null : connectionKey);
+  }, []);
+
+  const handleConnectionClose = useCallback(() => {
+    setOpenConnection(null);
+  }, []);
+
   // Arrange nodes in a circular conceptual order
   const orderedNodes = [
     nodes.find(n => n.id === 'ai'),
@@ -89,7 +114,7 @@ export function LoopScreen({
       />
       
       {/* Loop Cards with radial background emphasis */}
-      <div className="space-y-2 relative">
+      <div className="space-y-0 relative">
         {/* Subtle radial gradient for visual gravity - theme aware */}
         <div 
           className="absolute inset-0 -z-10 pointer-events-none dark:opacity-50"
@@ -99,27 +124,37 @@ export function LoopScreen({
           }}
         />
         
-        <h3 className="text-sm font-semibold text-muted-foreground">The Feedback Loop</h3>
-        <div className="grid gap-2.5">
-          {orderedNodes.map((node, index) => (
-            <div key={node.id} className="relative">
-              <LoopCard 
-                node={node} 
-                stressLevel={nodeStressMap[node.id]}
-              />
-              {index < orderedNodes.length - 1 && (
-                <div 
-                  className="absolute left-1/2 -bottom-1.5 w-px h-2.5 opacity-30"
-                  style={{
-                    background: 'linear-gradient(to bottom, hsl(var(--border)), transparent)'
-                  }}
+        <h3 className="text-sm font-semibold text-muted-foreground mb-2">The Feedback Loop</h3>
+        <div className="space-y-0">
+          {orderedNodes.map((node, index) => {
+            const nextNode = orderedNodes[index + 1];
+            const connectionKey = nextNode ? `${node.id}->${nextNode.id}` : null;
+            const isLastNode = index === orderedNodes.length - 1;
+            
+            return (
+              <div key={node.id} className="relative">
+                <LoopCard 
+                  node={node} 
+                  stressLevel={nodeStressMap[node.id]}
+                  onClick={handleConnectionClose}
                 />
-              )}
-            </div>
-          ))}
+                
+                {/* Connection link to next node */}
+                {!isLastNode && connectionKey && (
+                  <LoopConnectionLink
+                    fromNodeId={node.id}
+                    toNodeId={nextNode.id}
+                    isOpen={openConnection === connectionKey}
+                    onToggle={() => handleConnectionToggle(connectionKey)}
+                    onClose={handleConnectionClose}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
         {/* Loop indicator - connects back to start */}
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center pt-2">
           <div className="text-xs text-muted-foreground/60 italic tracking-wide">↻ Loop reinforces</div>
         </div>
       </div>
