@@ -7,7 +7,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'AI',
     description: 'Rapid deployment of AI systems replacing human cognitive and physical labor across industries',
     category: 'ai',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'up'
   },
   {
     id: 'labor',
@@ -15,7 +16,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Jobs',
     description: 'Reduction in demand for human workers as tasks become automated',
     category: 'labor',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'up'
   },
   {
     id: 'income',
@@ -23,7 +25,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Income',
     description: 'Falling wages and reduced earning capacity for displaced workers',
     category: 'labor',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'down'
   },
   {
     id: 'consumption',
@@ -31,7 +34,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Spending',
     description: 'Reduced consumer spending due to lower incomes',
     category: 'fiscal',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'down'
   },
   {
     id: 'fertility',
@@ -39,7 +43,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Births',
     description: 'Falling birth rates driven by economic insecurity and pessimism',
     category: 'demographic',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'down'
   },
   {
     id: 'aging',
@@ -47,7 +52,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Aging',
     description: 'Rising median age and dependency ratio',
     category: 'demographic',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'up'
   },
   {
     id: 'fiscal',
@@ -55,7 +61,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Deficit',
     description: 'Growing gap between tax revenue and social obligations',
     category: 'fiscal',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'up'
   },
   {
     id: 'capital',
@@ -63,7 +70,8 @@ export const loopNodes: LoopNode[] = [
     shortLabel: 'Wealth',
     description: 'Increasing share of economic gains flowing to capital owners',
     category: 'capital',
-    intensity: 0.5
+    intensity: 0.5,
+    trend: 'up'
   }
 ];
 
@@ -88,7 +96,13 @@ export const countryScenarios: CountryScenario[] = [
     flag: '🇯🇵',
     description: 'Advanced aging, low immigration, high automation adoption',
     params: { aiAdoptionSpeed: 75, welfareLevel: 60, immigrationRate: 10, redistributionLevel: 40 },
-    highlights: ['Oldest population globally', 'Robot density leader', 'Strict immigration policy']
+    highlights: ['Oldest population globally', 'Robot density leader', 'Strict immigration policy'],
+    metrics: {
+      birthRateTrend: 'declining',
+      workforceTrend: 'shrinking',
+      fiscalStress: 'high',
+      aiExposure: 'very-high'
+    }
   },
   {
     id: 'korea',
@@ -96,7 +110,13 @@ export const countryScenarios: CountryScenario[] = [
     flag: '🇰🇷',
     description: 'Lowest fertility, rapid digitization, high inequality',
     params: { aiAdoptionSpeed: 80, welfareLevel: 35, immigrationRate: 15, redistributionLevel: 30 },
-    highlights: ['0.7 fertility rate', 'Highest robot density', 'Youth unemployment crisis']
+    highlights: ['0.7 fertility rate', 'Highest robot density', 'Youth unemployment crisis'],
+    metrics: {
+      birthRateTrend: 'declining',
+      workforceTrend: 'shrinking',
+      fiscalStress: 'high',
+      aiExposure: 'very-high'
+    }
   },
   {
     id: 'china',
@@ -104,7 +124,13 @@ export const countryScenarios: CountryScenario[] = [
     flag: '🇨🇳',
     description: 'Rapid aging transition, AI superpower ambitions, limited welfare',
     params: { aiAdoptionSpeed: 85, welfareLevel: 25, immigrationRate: 5, redistributionLevel: 25 },
-    highlights: ['Demographic cliff approaching', 'AI investment surge', 'Hukou system constraints']
+    highlights: ['Demographic cliff approaching', 'AI investment surge', 'Hukou system constraints'],
+    metrics: {
+      birthRateTrend: 'declining',
+      workforceTrend: 'shrinking',
+      fiscalStress: 'medium',
+      aiExposure: 'very-high'
+    }
   },
   {
     id: 'eu',
@@ -112,7 +138,13 @@ export const countryScenarios: CountryScenario[] = [
     flag: '🇪🇺',
     description: 'Strong welfare, moderate automation, aging but immigration buffer',
     params: { aiAdoptionSpeed: 55, welfareLevel: 75, immigrationRate: 45, redistributionLevel: 65 },
-    highlights: ['Strong social safety nets', 'AI regulation focus', 'Migration debates']
+    highlights: ['Strong social safety nets', 'AI regulation focus', 'Migration debates'],
+    metrics: {
+      birthRateTrend: 'stable',
+      workforceTrend: 'stable',
+      fiscalStress: 'medium',
+      aiExposure: 'medium'
+    }
   },
   {
     id: 'usa',
@@ -120,7 +152,13 @@ export const countryScenarios: CountryScenario[] = [
     flag: '🇺🇸',
     description: 'High inequality, tech leadership, immigration dependent',
     params: { aiAdoptionSpeed: 70, welfareLevel: 40, immigrationRate: 55, redistributionLevel: 35 },
-    highlights: ['Tech sector dominance', 'Wealth concentration', 'Immigration politics']
+    highlights: ['Tech sector dominance', 'Wealth concentration', 'Immigration politics'],
+    metrics: {
+      birthRateTrend: 'stable',
+      workforceTrend: 'stable',
+      fiscalStress: 'medium',
+      aiExposure: 'high'
+    }
   }
 ];
 
@@ -260,7 +298,7 @@ export const sampleNews: NewsItem[] = [
     source: 'Asia Pacific News',
     date: '2025-01-22',
     category: 'stabilizing',
-    relatedNodes: ['income', 'consumption', 'welfare'],
+    relatedNodes: ['income', 'consumption'],
     summary: 'Free housing, healthcare, and transport for all residents'
   },
   {
@@ -271,6 +309,24 @@ export const sampleNews: NewsItem[] = [
     category: 'accelerating',
     relatedNodes: ['labor', 'income'],
     summary: 'Automated stores eliminate cashier and stocking positions'
+  },
+  {
+    id: '9',
+    headline: 'New study finds AI has minimal impact on overall productivity',
+    source: 'Economic Journal',
+    date: '2025-01-20',
+    category: 'noise',
+    relatedNodes: ['ai'],
+    summary: 'Researchers debate measurement methods and long-term effects'
+  },
+  {
+    id: '10',
+    headline: 'Celebrity launches new AI-powered fashion app',
+    source: 'Entertainment Daily',
+    date: '2025-01-19',
+    category: 'noise',
+    relatedNodes: [],
+    summary: 'App uses AI to recommend outfits based on personal style'
   }
 ];
 
@@ -279,50 +335,58 @@ export const questionnaireQuestions: QuestionnaireQuestion[] = [
     id: 'q1',
     question: 'How do you primarily earn your income?',
     options: [
-      { text: 'Salary from cognitive/knowledge work', nodeAffinity: 'labor', weight: 0.9 },
-      { text: 'Salary from physical/manual work', nodeAffinity: 'labor', weight: 1.0 },
-      { text: 'Business ownership or investments', nodeAffinity: 'capital', weight: 0.9 },
-      { text: 'Government benefits or pension', nodeAffinity: 'fiscal', weight: 0.8 }
+      { text: 'Salary from cognitive/knowledge work', nodeAffinity: 'labor', weight: 2 },
+      { text: 'Salary from physical/manual work', nodeAffinity: 'labor', weight: 3 },
+      { text: 'Business ownership or investments', nodeAffinity: 'capital', weight: 1 },
+      { text: 'Government benefits or pension', nodeAffinity: 'fiscal', weight: 4 }
     ]
   },
   {
     id: 'q2',
-    question: 'How replaceable is your current work by AI in the next 5 years?',
+    question: 'How replaceable is your work by AI in the next 5 years?',
     options: [
-      { text: 'Highly replaceable', nodeAffinity: 'ai', weight: 1.0 },
-      { text: 'Partially replaceable', nodeAffinity: 'ai', weight: 0.6 },
-      { text: 'Unlikely to be replaced', nodeAffinity: 'labor', weight: 0.3 },
-      { text: 'AI will augment my work', nodeAffinity: 'capital', weight: 0.5 }
+      { text: 'Highly replaceable', nodeAffinity: 'ai', weight: 3 },
+      { text: 'Partially replaceable', nodeAffinity: 'ai', weight: 2 },
+      { text: 'Unlikely to be replaced', nodeAffinity: 'labor', weight: 1 },
+      { text: 'AI will augment my work', nodeAffinity: 'capital', weight: 1 }
     ]
   },
   {
     id: 'q3',
     question: 'What is your current life stage?',
     options: [
-      { text: 'Young adult, no children', nodeAffinity: 'fertility', weight: 0.7 },
-      { text: 'Parent of young children', nodeAffinity: 'fertility', weight: 0.5 },
-      { text: 'Middle-aged, children grown', nodeAffinity: 'aging', weight: 0.6 },
-      { text: 'Retired or near retirement', nodeAffinity: 'aging', weight: 1.0 }
+      { text: 'Young adult, no children', nodeAffinity: 'fertility', weight: 2 },
+      { text: 'Parent of young children', nodeAffinity: 'fertility', weight: 1 },
+      { text: 'Middle-aged, children grown', nodeAffinity: 'aging', weight: 3 },
+      { text: 'Retired or near retirement', nodeAffinity: 'aging', weight: 4 }
     ]
   },
   {
     id: 'q4',
     question: 'How would you describe your financial security?',
     options: [
-      { text: 'Living paycheck to paycheck', nodeAffinity: 'income', weight: 1.0 },
-      { text: 'Some savings, but vulnerable', nodeAffinity: 'income', weight: 0.7 },
-      { text: 'Comfortable with reserves', nodeAffinity: 'consumption', weight: 0.4 },
-      { text: 'Wealthy, assets generate income', nodeAffinity: 'capital', weight: 0.9 }
+      { text: 'Living paycheck to paycheck', nodeAffinity: 'income', weight: 4 },
+      { text: 'Some savings, but vulnerable', nodeAffinity: 'income', weight: 3 },
+      { text: 'Comfortable with reserves', nodeAffinity: 'consumption', weight: 2 },
+      { text: 'Wealthy, assets generate income', nodeAffinity: 'capital', weight: 1 }
     ]
   },
   {
     id: 'q5',
     question: 'What concerns you most about the next decade?',
     options: [
-      { text: 'Finding or keeping stable work', nodeAffinity: 'labor', weight: 1.0 },
-      { text: 'Affording healthcare and retirement', nodeAffinity: 'fiscal', weight: 0.9 },
-      { text: 'The world my children will inherit', nodeAffinity: 'fertility', weight: 0.8 },
-      { text: 'Maintaining my standard of living', nodeAffinity: 'consumption', weight: 0.7 }
+      { text: 'Finding or keeping stable work', nodeAffinity: 'labor', weight: 2 },
+      { text: 'Affording healthcare and retirement', nodeAffinity: 'fiscal', weight: 4 },
+      { text: 'The world my children will inherit', nodeAffinity: 'fertility', weight: 3 },
+      { text: 'Maintaining my standard of living', nodeAffinity: 'consumption', weight: 2 }
     ]
   }
+];
+
+export const loopStages = [
+  { stage: 1, name: 'Productivity Gains', description: 'You are positioned where AI creates value but labor still benefits.' },
+  { stage: 2, name: 'Labor Pressure', description: 'You are at the stage where automation begins displacing traditional work.' },
+  { stage: 3, name: 'Income Erosion', description: 'You are experiencing the effects of reduced earning capacity.' },
+  { stage: 4, name: 'Demographic Strain', description: 'You are at the intersection of economic insecurity and demographic shifts.' },
+  { stage: 5, name: 'Fiscal Crisis', description: 'You are positioned where systemic pressures converge on public finances.' }
 ];

@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
-import { Activity, Sliders, Users, ShieldAlert, Newspaper } from 'lucide-react';
+import { Activity, User, Globe, ShieldAlert, Newspaper } from 'lucide-react';
 
-type TabId = 'loop' | 'controls' | 'countries' | 'interventions' | 'reflect' | 'news';
+type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now';
 
 interface NavigationProps {
   activeTab: TabId;
@@ -11,10 +11,10 @@ interface NavigationProps {
 
 const tabs = [
   { id: 'loop' as TabId, icon: Activity, label: 'Loop' },
-  { id: 'controls' as TabId, icon: Sliders, label: 'Controls' },
-  { id: 'countries' as TabId, icon: Users, label: 'Countries' },
-  { id: 'interventions' as TabId, icon: ShieldAlert, label: 'Policy' },
-  { id: 'news' as TabId, icon: Newspaper, label: 'Now' },
+  { id: 'you' as TabId, icon: User, label: 'You' },
+  { id: 'countries' as TabId, icon: Globe, label: 'Countries' },
+  { id: 'interventions' as TabId, icon: ShieldAlert, label: 'Interventions' },
+  { id: 'now' as TabId, icon: Newspaper, label: 'Now' },
 ];
 
 export function Navigation({ activeTab, onTabChange, className }: NavigationProps) {
