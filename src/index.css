@@ -2,110 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Doom Loop Design System - Dark, analytical, system-dynamics aesthetic */
+/* Doom Loop Design System - Light, analytical, system-dynamics aesthetic */
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 20% 10%;
+    --background: 0 0% 98%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 10%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 220 70% 50%;
+    --primary: 220 60% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 92%;
-    --secondary-foreground: 220 20% 20%;
+    --secondary: 220 10% 94%;
+    --secondary-foreground: 220 15% 25%;
 
-    --muted: 220 15% 94%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 220 10% 96%;
+    --muted-foreground: 220 8% 50%;
 
-    --accent: 220 15% 92%;
-    --accent-foreground: 220 20% 20%;
+    --accent: 220 10% 94%;
+    --accent-foreground: 220 15% 20%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 220 70% 50%;
+    --border: 220 10% 90%;
+    --input: 220 10% 90%;
+    --ring: 220 60% 45%;
 
     --radius: 0.5rem;
 
-    /* Loop Node Colors */
-    --node-ai: 260 70% 60%;
-    --node-labor: 25 90% 55%;
-    --node-demographic: 340 70% 55%;
-    --node-fiscal: 45 90% 50%;
-    --node-capital: 160 60% 45%;
+    /* Loop Node Colors - Muted, analytical palette */
+    --node-ai: 250 45% 55%;
+    --node-labor: 25 60% 50%;
+    --node-demographic: 340 50% 50%;
+    --node-fiscal: 45 70% 45%;
+    --node-capital: 160 45% 40%;
 
     /* Status Colors */
-    --status-stable: 145 60% 42%;
-    --status-stressed: 45 90% 50%;
-    --status-critical: 0 72% 51%;
+    --status-stable: 145 50% 38%;
+    --status-stressed: 40 70% 48%;
+    --status-critical: 0 60% 48%;
 
     /* Flow Colors */
-    --flow-accelerating: 0 72% 51%;
-    --flow-stabilizing: 145 60% 42%;
+    --flow-accelerating: 0 55% 50%;
+    --flow-stabilizing: 145 50% 38%;
   }
 
   .dark {
-    --background: 220 25% 6%;
+    --background: 220 15% 8%;
     --foreground: 220 10% 92%;
 
-    --card: 220 25% 9%;
+    --card: 220 15% 11%;
     --card-foreground: 220 10% 92%;
 
-    --popover: 220 25% 9%;
+    --popover: 220 15% 11%;
     --popover-foreground: 220 10% 92%;
 
-    --primary: 220 70% 55%;
+    --primary: 220 60% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 20% 16%;
+    --secondary: 220 15% 18%;
     --secondary-foreground: 220 10% 85%;
 
-    --muted: 220 20% 14%;
-    --muted-foreground: 220 10% 55%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 220 8% 55%;
 
-    --accent: 220 20% 16%;
+    --accent: 220 15% 18%;
     --accent-foreground: 220 10% 92%;
 
-    --destructive: 0 62% 45%;
+    --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 220 70% 55%;
+    --border: 220 12% 20%;
+    --input: 220 12% 20%;
+    --ring: 220 60% 55%;
 
-    /* Loop Node Colors - Vibrant on dark */
-    --node-ai: 260 75% 65%;
-    --node-labor: 25 95% 60%;
-    --node-demographic: 340 75% 60%;
-    --node-fiscal: 45 95% 55%;
-    --node-capital: 160 65% 50%;
+    /* Loop Node Colors */
+    --node-ai: 250 50% 60%;
+    --node-labor: 25 65% 55%;
+    --node-demographic: 340 55% 55%;
+    --node-fiscal: 45 75% 50%;
+    --node-capital: 160 50% 45%;
 
     /* Status Colors */
-    --status-stable: 145 65% 48%;
-    --status-stressed: 45 95% 55%;
-    --status-critical: 0 72% 55%;
+    --status-stable: 145 55% 45%;
+    --status-stressed: 40 75% 52%;
+    --status-critical: 0 60% 52%;
 
     /* Flow Colors */
-    --flow-accelerating: 0 75% 60%;
-    --flow-stabilizing: 145 65% 48%;
+    --flow-accelerating: 0 60% 55%;
+    --flow-stabilizing: 145 55% 45%;
 
-    --sidebar-background: 220 25% 8%;
+    --sidebar-background: 220 15% 10%;
     --sidebar-foreground: 220 10% 85%;
-    --sidebar-primary: 220 70% 55%;
+    --sidebar-primary: 220 60% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 20% 14%;
+    --sidebar-accent: 220 15% 16%;
     --sidebar-accent-foreground: 220 10% 85%;
-    --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 220 70% 55%;
+    --sidebar-border: 220 12% 20%;
+    --sidebar-ring: 220 60% 55%;
   }
 }
 

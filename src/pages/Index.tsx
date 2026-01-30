@@ -28,7 +28,7 @@ const Index = () => {
   }, [setAllParams]);
 
   return (
-    <div className="min-h-screen bg-background dark pb-20">
+    <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b">
         <div className="max-w-lg mx-auto px-4 py-3">
