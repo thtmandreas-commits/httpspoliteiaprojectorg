@@ -2,12 +2,13 @@ import { useState, useCallback } from 'react';
 import { useSignalEngine } from '@/hooks/useSignalEngine';
 import { SignalPanel } from './SignalPanel';
 import { LiveSignalFetcher } from './LiveSignalFetcher';
+import { CountrySignalComparison } from './CountrySignalComparison';
 import { NewsItem } from '@/types/simulation';
 import { Signal } from '@/types/signals';
 import { sampleNews } from '@/data/loopData';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Radio, BarChart3, Newspaper } from 'lucide-react';
+import { TrendingUp, TrendingDown, Radio, BarChart3, Newspaper, Globe } from 'lucide-react';
 
 const categoryConfig = {
   accelerating: {
@@ -60,7 +61,7 @@ function NewsCard({ item }: { item: NewsItem }) {
   );
 }
 
-type ViewMode = 'signals' | 'headlines';
+type ViewMode = 'signals' | 'countries' | 'headlines';
 
 export function NowScreen() {
   const [viewMode, setViewMode] = useState<ViewMode>('signals');
@@ -90,7 +91,7 @@ export function NowScreen() {
         <button
           onClick={() => setViewMode('signals')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium transition-colors',
+            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-colors',
             viewMode === 'signals' 
               ? 'bg-background shadow-sm text-foreground' 
               : 'text-muted-foreground hover:text-foreground'
@@ -100,9 +101,21 @@ export function NowScreen() {
           Signals
         </button>
         <button
+          onClick={() => setViewMode('countries')}
+          className={cn(
+            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-colors',
+            viewMode === 'countries' 
+              ? 'bg-background shadow-sm text-foreground' 
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <Globe className="w-3.5 h-3.5" />
+          Regions
+        </button>
+        <button
           onClick={() => setViewMode('headlines')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium transition-colors',
+            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-medium transition-colors',
             viewMode === 'headlines' 
               ? 'bg-background shadow-sm text-foreground' 
               : 'text-muted-foreground hover:text-foreground'
@@ -124,6 +137,8 @@ export function NowScreen() {
             loopPressureTrend={loopPressureTrend}
           />
         </>
+      ) : viewMode === 'countries' ? (
+        <CountrySignalComparison />
       ) : (
         <>
           {/* Filter summary */}
