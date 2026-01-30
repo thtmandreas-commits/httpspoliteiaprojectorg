@@ -1,7 +1,7 @@
 import { SimulationParams, LoopNode } from '@/types/simulation';
 import { AggregatedSignal } from '@/types/signals';
 import { LoopCard } from './LoopCard';
-import { ParamSlider } from './ParamSlider';
+import { SensitivityToggle } from './SensitivityToggle';
 import { TensionGauge } from './TensionGauge';
 import { signalCategoryMeta } from '@/types/signals';
 
@@ -124,29 +124,42 @@ export function LoopScreen({
         </div>
       </div>
 
-      {/* Sliders */}
-      <div className="pt-4 border-t space-y-4">
-        <h3 className="text-sm font-semibold">Adjust Parameters</h3>
-        <ParamSlider
-          label="AI Adoption Speed"
-          value={params.aiAdoptionSpeed}
-          onChange={(v) => onParamChange('aiAdoptionSpeed', v)}
-        />
-        <ParamSlider
-          label="Welfare Level"
-          value={params.welfareLevel}
-          onChange={(v) => onParamChange('welfareLevel', v)}
-        />
-        <ParamSlider
-          label="Immigration Rate"
-          value={params.immigrationRate}
-          onChange={(v) => onParamChange('immigrationRate', v)}
-        />
-        <ParamSlider
-          label="Redistribution"
-          value={params.redistributionLevel}
-          onChange={(v) => onParamChange('redistributionLevel', v)}
-        />
+      {/* Sensitivity Controls */}
+      <div className="pt-4 border-t border-border/50 space-y-4">
+        <div className="space-y-1">
+          <h3 className="text-sm font-semibold text-foreground/90">Test Sensitivity</h3>
+          <p className="text-xs text-muted-foreground/70 leading-relaxed">
+            These controls test system sensitivity, not solutions.
+          </p>
+        </div>
+        
+        <div className="space-y-4">
+          <SensitivityToggle
+            label="AI Adoption Speed"
+            value={params.aiAdoptionSpeed}
+            onChange={(v) => onParamChange('aiAdoptionSpeed', v)}
+          />
+          <SensitivityToggle
+            label="Income Floor / Redistribution"
+            value={params.incomeFloorRedistribution}
+            onChange={(v) => onParamChange('incomeFloorRedistribution', v)}
+          />
+          <SensitivityToggle
+            label="Immigration Openness"
+            value={params.immigrationOpenness}
+            onChange={(v) => onParamChange('immigrationOpenness', v)}
+          />
+          <SensitivityToggle
+            label="Cost of Living Pressure"
+            value={params.costOfLivingPressure}
+            onChange={(v) => onParamChange('costOfLivingPressure', v)}
+          />
+          <SensitivityToggle
+            label="State Capacity"
+            value={params.stateCapacity}
+            onChange={(v) => onParamChange('stateCapacity', v)}
+          />
+        </div>
       </div>
     </div>
   );
