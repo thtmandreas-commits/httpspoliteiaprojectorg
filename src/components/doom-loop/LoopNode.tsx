@@ -1,5 +1,6 @@
 import { LoopNode as LoopNodeType } from '@/types/simulation';
 import { cn } from '@/lib/utils';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface LoopNodeProps {
   node: LoopNodeType;
@@ -14,6 +15,12 @@ const categoryColors: Record<string, string> = {
   demographic: 'border-node-demographic bg-node-demographic/10 text-node-demographic',
   fiscal: 'border-node-fiscal bg-node-fiscal/10 text-node-fiscal',
   capital: 'border-node-capital bg-node-capital/10 text-node-capital'
+};
+
+const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'neutral' }) => {
+  if (trend === 'up') return <TrendingUp className="w-3 h-3" />;
+  if (trend === 'down') return <TrendingDown className="w-3 h-3" />;
+  return <Minus className="w-3 h-3" />;
 };
 
 export function LoopNodeComponent({ node, position, isActive, onClick }: LoopNodeProps) {
@@ -39,9 +46,9 @@ export function LoopNodeComponent({ node, position, isActive, onClick }: LoopNod
       <span className="text-xs font-semibold text-center leading-tight px-1">
         {node.shortLabel}
       </span>
-      <span className="text-[10px] opacity-70">
-        {Math.round(node.intensity * 100)}%
-      </span>
+      <div className="flex items-center gap-0.5 mt-0.5">
+        <TrendIcon trend={node.trend} />
+      </div>
     </button>
   );
 }

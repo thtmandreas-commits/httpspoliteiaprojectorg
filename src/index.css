@@ -178,4 +178,13 @@
   .bg-stabilizing {
     background-color: hsl(var(--flow-stabilizing));
   }
+  .text-flow-accelerating {
+    color: hsl(var(--flow-accelerating));
+  }
+  .text-flow-stabilizing {
+    color: hsl(var(--flow-stabilizing));
+  }
+  .text-status-stressed {
+    color: hsl(var(--status-stressed));
+  }
 }

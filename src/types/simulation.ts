@@ -12,6 +12,7 @@ export interface LoopNode {
   description: string;
   category: 'ai' | 'labor' | 'demographic' | 'fiscal' | 'capital';
   intensity: number;
+  trend: 'up' | 'down' | 'neutral';
 }
 
 export interface LoopConnection {
@@ -29,6 +30,14 @@ export interface CountryScenario {
   description: string;
   params: SimulationParams;
   highlights: string[];
+  metrics: CountryMetrics;
+}
+
+export interface CountryMetrics {
+  birthRateTrend: 'declining' | 'stable' | 'growing';
+  workforceTrend: 'shrinking' | 'stable' | 'growing';
+  fiscalStress: 'low' | 'medium' | 'high' | 'critical';
+  aiExposure: 'low' | 'medium' | 'high' | 'very-high';
 }
 
 export interface Intervention {
@@ -46,7 +55,7 @@ export interface NewsItem {
   headline: string;
   source: string;
   date: string;
-  category: 'accelerating' | 'stabilizing';
+  category: 'accelerating' | 'stabilizing' | 'noise';
   relatedNodes: string[];
   summary: string;
 }
@@ -62,8 +71,7 @@ export interface QuestionnaireQuestion {
 }
 
 export interface QuestionnaireResult {
-  primaryNode: string;
-  secondaryNode: string;
+  stage: number;
+  stageName: string;
   interpretation: string;
-  vulnerabilities: string[];
 }

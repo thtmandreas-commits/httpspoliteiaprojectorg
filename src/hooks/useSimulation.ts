@@ -49,12 +49,36 @@ export function useSimulation(initialParams: SimulationParams = defaultParams) {
     };
   }, [params]);
 
+  // Calculate trends based on parameter values
+  const nodeTrends = useMemo(() => {
+    const { aiAdoptionSpeed, welfareLevel, immigrationRate, redistributionLevel } = params;
+    
+    const getTrend = (intensity: number, mitigationFactor: number): 'up' | 'down' | 'neutral' => {
+      const netEffect = intensity - mitigationFactor;
+      if (netEffect > 0.15) return 'up';
+      if (netEffect < -0.15) return 'down';
+      return 'neutral';
+    };
+
+    return {
+      ai: aiAdoptionSpeed > 60 ? 'up' : aiAdoptionSpeed < 40 ? 'down' : 'neutral',
+      labor: getTrend(nodeIntensities.labor, welfareLevel * 0.005),
+      income: nodeIntensities.income > 0.4 ? 'down' : 'up', // Income decline is bad
+      consumption: nodeIntensities.consumption > 0.4 ? 'down' : 'up',
+      fertility: nodeIntensities.fertility > 0.3 ? 'down' : 'neutral',
+      aging: immigrationRate > 40 ? 'neutral' : 'up',
+      fiscal: getTrend(nodeIntensities.fiscal, redistributionLevel * 0.003),
+      capital: redistributionLevel > 50 ? 'neutral' : 'up'
+    } as Record<string, 'up' | 'down' | 'neutral'>;
+  }, [params, nodeIntensities]);
+
   const computedNodes = useMemo((): LoopNode[] => {
     return loopNodes.map(node => ({
       ...node,
-      intensity: nodeIntensities[node.id as keyof typeof nodeIntensities] || 0.5
+      intensity: nodeIntensities[node.id as keyof typeof nodeIntensities] || 0.5,
+      trend: nodeTrends[node.id] || 'neutral'
     }));
-  }, [nodeIntensities]);
+  }, [nodeIntensities, nodeTrends]);
 
   const overallTension = useMemo(() => {
     const weights = {
@@ -90,6 +114,7 @@ export function useSimulation(initialParams: SimulationParams = defaultParams) {
     nodes: computedNodes,
     connections: loopConnections,
     nodeIntensities,
+    nodeTrends,
     overallTension,
     tensionLevel
   };
