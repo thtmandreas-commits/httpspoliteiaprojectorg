@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSimulation } from '@/hooks/useSimulation';
+import { useSignalEngine } from '@/hooks/useSignalEngine';
 import { LoopScreen } from '@/components/doom-loop/LoopScreen';
 import { YouScreen } from '@/components/doom-loop/YouScreen';
 import { CountriesScreen } from '@/components/doom-loop/CountriesScreen';
@@ -9,6 +10,7 @@ import { Navigation } from '@/components/doom-loop/Navigation';
 import { BrandHeader } from '@/components/doom-loop/BrandHeader';
 import { AdPlaceholder } from '@/components/doom-loop/AdPlaceholder';
 import { CountryScenario } from '@/types/simulation';
+import { Signal } from '@/types/signals';
 
 type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now';
 
@@ -24,10 +26,23 @@ const Index = () => {
     tensionLevel
   } = useSimulation();
 
+  // Signal engine for live data integration
+  const { 
+    aggregatedSignals, 
+    loopPressure, 
+    loopPressureTrend,
+    addLiveSignals 
+  } = useSignalEngine();
+
   const handleSelectCountry = useCallback((country: CountryScenario) => {
     setAllParams(country.params);
     setActiveTab('loop');
   }, [setAllParams]);
+
+  // Handler for when NowScreen fetches new signals
+  const handleSignalsReceived = useCallback((newSignals: Signal[]) => {
+    addLiveSignals(newSignals);
+  }, [addLiveSignals]);
 
   // Show prominent branding on Loop and Now screens
   const showBrandHeader = activeTab === 'loop' || activeTab === 'now';
@@ -64,6 +79,9 @@ const Index = () => {
               onParamChange={updateParam}
               overallTension={overallTension}
               tensionLevel={tensionLevel}
+              aggregatedSignals={aggregatedSignals}
+              signalLoopPressure={loopPressure}
+              signalPressureTrend={loopPressureTrend}
             />
           </div>
         )}
