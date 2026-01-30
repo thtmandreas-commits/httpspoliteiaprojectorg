@@ -1,19 +1,22 @@
+import { useState } from 'react';
+import { useSignalEngine } from '@/hooks/useSignalEngine';
+import { SignalPanel } from './SignalPanel';
 import { NewsItem } from '@/types/simulation';
 import { sampleNews } from '@/data/loopData';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, Radio } from 'lucide-react';
+import { TrendingUp, TrendingDown, Radio, BarChart3, Newspaper } from 'lucide-react';
 
 const categoryConfig = {
   accelerating: {
     label: 'Loop accelerating',
     icon: TrendingUp,
-    className: 'bg-flow-accelerating/20 text-flow-accelerating'
+    className: 'bg-flow-accelerating/10 text-flow-accelerating'
   },
   stabilizing: {
     label: 'Loop stabilizing',
     icon: TrendingDown,
-    className: 'bg-flow-stabilizing/20 text-flow-stabilizing'
+    className: 'bg-flow-stabilizing/10 text-flow-stabilizing'
   },
   noise: {
     label: 'Noise',
@@ -55,7 +58,12 @@ function NewsCard({ item }: { item: NewsItem }) {
   );
 }
 
+type ViewMode = 'signals' | 'headlines';
+
 export function NowScreen() {
+  const [viewMode, setViewMode] = useState<ViewMode>('signals');
+  const { aggregatedSignals, loopPressure, loopPressureTrend } = useSignalEngine();
+  
   const accelerating = sampleNews.filter(n => n.category === 'accelerating');
   const stabilizing = sampleNews.filter(n => n.category === 'stabilizing');
   const noise = sampleNews.filter(n => n.category === 'noise');
@@ -63,31 +71,71 @@ export function NowScreen() {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-semibold">Now Feed</h3>
+        <h3 className="text-sm font-semibold">Now</h3>
         <p className="text-xs text-muted-foreground mt-1">
-          Recent headlines categorized by their impact on the loop.
+          {viewMode === 'signals' 
+            ? 'Aggregated directional signals from public information.'
+            : 'Sample headlines categorized by loop impact.'}
         </p>
       </div>
 
-      {/* Filter summary */}
-      <div className="flex items-center gap-2 text-xs">
-        <span className={cn('px-2 py-1 rounded-full', categoryConfig.accelerating.className)}>
-          {accelerating.length} accelerating
-        </span>
-        <span className={cn('px-2 py-1 rounded-full', categoryConfig.stabilizing.className)}>
-          {stabilizing.length} stabilizing
-        </span>
-        <span className={cn('px-2 py-1 rounded-full', categoryConfig.noise.className)}>
-          {noise.length} noise
-        </span>
+      {/* View Toggle */}
+      <div className="flex rounded-lg bg-muted p-1">
+        <button
+          onClick={() => setViewMode('signals')}
+          className={cn(
+            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium transition-colors',
+            viewMode === 'signals' 
+              ? 'bg-background shadow-sm text-foreground' 
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <BarChart3 className="w-3.5 h-3.5" />
+          Signals
+        </button>
+        <button
+          onClick={() => setViewMode('headlines')}
+          className={cn(
+            'flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-md text-xs font-medium transition-colors',
+            viewMode === 'headlines' 
+              ? 'bg-background shadow-sm text-foreground' 
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <Newspaper className="w-3.5 h-3.5" />
+          Headlines
+        </button>
       </div>
 
-      {/* News Feed */}
-      <div className="space-y-2">
-        {sampleNews.map((item) => (
-          <NewsCard key={item.id} item={item} />
-        ))}
-      </div>
+      {viewMode === 'signals' ? (
+        <SignalPanel 
+          aggregatedSignals={aggregatedSignals}
+          loopPressure={loopPressure}
+          loopPressureTrend={loopPressureTrend}
+        />
+      ) : (
+        <>
+          {/* Filter summary */}
+          <div className="flex items-center gap-2 text-xs">
+            <span className={cn('px-2 py-1 rounded-full', categoryConfig.accelerating.className)}>
+              {accelerating.length} accelerating
+            </span>
+            <span className={cn('px-2 py-1 rounded-full', categoryConfig.stabilizing.className)}>
+              {stabilizing.length} stabilizing
+            </span>
+            <span className={cn('px-2 py-1 rounded-full', categoryConfig.noise.className)}>
+              {noise.length} noise
+            </span>
+          </div>
+
+          {/* News Feed */}
+          <div className="space-y-2">
+            {sampleNews.map((item) => (
+              <NewsCard key={item.id} item={item} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
