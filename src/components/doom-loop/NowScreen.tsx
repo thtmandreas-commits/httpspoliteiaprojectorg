@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useSignalEngine } from '@/hooks/useSignalEngine';
 import { SignalPanel } from './SignalPanel';
+import { LiveSignalFetcher } from './LiveSignalFetcher';
 import { NewsItem } from '@/types/simulation';
+import { Signal } from '@/types/signals';
 import { sampleNews } from '@/data/loopData';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -62,7 +64,11 @@ type ViewMode = 'signals' | 'headlines';
 
 export function NowScreen() {
   const [viewMode, setViewMode] = useState<ViewMode>('signals');
-  const { aggregatedSignals, loopPressure, loopPressureTrend } = useSignalEngine();
+  const { aggregatedSignals, loopPressure, loopPressureTrend, addLiveSignals, signals } = useSignalEngine();
+  
+  const handleSignalsReceived = useCallback((newSignals: Signal[]) => {
+    addLiveSignals(newSignals);
+  }, [addLiveSignals]);
   
   const accelerating = sampleNews.filter(n => n.category === 'accelerating');
   const stabilizing = sampleNews.filter(n => n.category === 'stabilizing');
@@ -108,11 +114,16 @@ export function NowScreen() {
       </div>
 
       {viewMode === 'signals' ? (
-        <SignalPanel 
-          aggregatedSignals={aggregatedSignals}
-          loopPressure={loopPressure}
-          loopPressureTrend={loopPressureTrend}
-        />
+        <>
+          {/* Live Signal Fetcher */}
+          <LiveSignalFetcher onSignalsReceived={handleSignalsReceived} />
+          
+          <SignalPanel 
+            aggregatedSignals={aggregatedSignals}
+            loopPressure={loopPressure}
+            loopPressureTrend={loopPressureTrend}
+          />
+        </>
       ) : (
         <>
           {/* Filter summary */}
