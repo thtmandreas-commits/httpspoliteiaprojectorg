@@ -148,6 +148,16 @@ export function useSignalEngine(initialSignals: Signal[] = sampleSignals) {
     };
     setSignals(prev => [newSignal, ...prev]);
   }, []);
+
+  // Add multiple live signals from external source
+  const addLiveSignals = useCallback((newSignals: Signal[]) => {
+    setSignals(prev => {
+      // Merge new signals, avoiding duplicates by ID
+      const existingIds = new Set(prev.map(s => s.id));
+      const uniqueNew = newSignals.filter(s => !existingIds.has(s.id));
+      return [...uniqueNew, ...prev];
+    });
+  }, []);
   
   // Get signals that affect a specific node
   const getNodeSignals = useCallback((nodeId: string) => {
@@ -173,10 +183,12 @@ export function useSignalEngine(initialSignals: Signal[] = sampleSignals) {
   
   return {
     state,
+    signals,
     aggregatedSignals,
     loopPressure,
     loopPressureTrend,
     addSignal,
+    addLiveSignals,
     getNodeSignals,
     getNodeIntensityModifier
   };
