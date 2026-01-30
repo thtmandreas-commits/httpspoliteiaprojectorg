@@ -12,6 +12,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useState } from 'react';
+import { PressureTimeline } from './PressureTimeline';
 
 interface SignalPanelProps {
   aggregatedSignals: AggregatedSignal[];
@@ -192,6 +193,9 @@ export function SignalPanel({ aggregatedSignals, loopPressure, loopPressureTrend
           </div>
         </CardContent>
       </Card>
+      
+      {/* Pressure Timeline */}
+      <PressureTimeline />
       
       {/* Signal Summary */}
       <div className="flex items-center gap-2 text-xs">
