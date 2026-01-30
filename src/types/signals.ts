@@ -1,18 +1,30 @@
-// Signal Engine Types - Abstract signal categories for loop variable modulation
+// Signal Engine Types - Fixed 12-category taxonomy for loop variable modulation
+// These categories represent system-level stress indicators, not news content
 
 export type SignalCategory = 
-  | 'automation_adoption'
-  | 'labor_demand'
-  | 'capital_efficiency'
-  | 'fiscal_pressure'
-  | 'demographic_shift'
-  | 'income_distribution'
-  | 'consumption_patterns'
-  | 'workforce_participation';
+  // Capital-Labor Domain
+  | 'capital_labor_decoupling'
+  | 'automation_substitution'
+  | 'wage_compression'
+  // Demographic Domain
+  | 'family_formation_friction'
+  | 'fertility_decline'
+  | 'dependency_ratio_stress'
+  // Fiscal Domain
+  | 'tax_base_erosion'
+  | 'welfare_system_strain'
+  // Political Domain
+  | 'policy_paralysis'
+  | 'legitimacy_erosion'
+  // Adaptation Domain
+  | 'redistribution_experimentation'
+  | 'structural_adaptation';
 
 export type SignalDirection = 'increasing' | 'decreasing' | 'stable';
 
 export type SignalStrength = 'weak' | 'moderate' | 'strong';
+
+export type TimeWindow = '7d' | '30d' | '90d';
 
 export interface Signal {
   id: string;
@@ -42,59 +54,127 @@ export interface AggregatedSignal {
   affectedNodes: string[];
 }
 
+// Time-windowed aggregation for heatmap
+export interface TimeWindowedSignal {
+  category: SignalCategory;
+  windows: Record<TimeWindow, {
+    direction: number; // -1 to 1
+    confidence: number; // 0 to 1 (opacity)
+    signalCount: number;
+  }>;
+}
+
 export interface SignalEngineState {
   signals: Signal[];
   aggregatedSignals: AggregatedSignal[];
+  timeWindowedSignals: TimeWindowedSignal[];
   lastUpdated: number;
   // Overall loop pressure derived from all signals
   loopPressure: number;
   loopPressureTrend: 'increasing' | 'decreasing' | 'stable';
 }
 
+// Domain groupings for UI organization
+export const signalDomains = {
+  capital_labor: {
+    label: 'Capital–Labor',
+    categories: ['capital_labor_decoupling', 'automation_substitution', 'wage_compression'] as SignalCategory[]
+  },
+  demographic: {
+    label: 'Demographic',
+    categories: ['family_formation_friction', 'fertility_decline', 'dependency_ratio_stress'] as SignalCategory[]
+  },
+  fiscal: {
+    label: 'Fiscal',
+    categories: ['tax_base_erosion', 'welfare_system_strain'] as SignalCategory[]
+  },
+  political: {
+    label: 'Political',
+    categories: ['policy_paralysis', 'legitimacy_erosion'] as SignalCategory[]
+  },
+  adaptation: {
+    label: 'Adaptation',
+    categories: ['redistribution_experimentation', 'structural_adaptation'] as SignalCategory[]
+  }
+};
+
 // Category metadata for display
 export const signalCategoryMeta: Record<SignalCategory, { 
   label: string; 
   description: string;
   affectedNodes: string[];
+  isAccelerating: boolean; // true = stress signal, false = stabilizing signal
 }> = {
-  automation_adoption: {
-    label: 'Automation Adoption',
-    description: 'Rate of AI/robotics deployment in productive sectors',
-    affectedNodes: ['ai', 'labor']
+  capital_labor_decoupling: {
+    label: 'Capital–Labor Decoupling',
+    description: 'Divergence between capital returns and labor compensation',
+    affectedNodes: ['capital', 'income'],
+    isAccelerating: true
   },
-  labor_demand: {
-    label: 'Labor Demand',
-    description: 'Aggregate demand for human workers across industries',
-    affectedNodes: ['labor', 'income']
+  automation_substitution: {
+    label: 'Automation Substitution',
+    description: 'Replacement of human labor by automated systems',
+    affectedNodes: ['ai', 'labor'],
+    isAccelerating: true
   },
-  capital_efficiency: {
-    label: 'Capital Efficiency',
-    description: 'Returns on capital investment relative to labor',
-    affectedNodes: ['capital', 'ai']
+  wage_compression: {
+    label: 'Wage Compression',
+    description: 'Downward pressure on wages across skill levels',
+    affectedNodes: ['income', 'consumption'],
+    isAccelerating: true
   },
-  fiscal_pressure: {
-    label: 'Fiscal Pressure',
-    description: 'Strain on public finances from obligations vs revenue',
-    affectedNodes: ['fiscal', 'aging']
+  family_formation_friction: {
+    label: 'Family Formation Friction',
+    description: 'Barriers to household formation and childbearing',
+    affectedNodes: ['fertility', 'consumption'],
+    isAccelerating: true
   },
-  demographic_shift: {
-    label: 'Demographic Shift',
-    description: 'Changes in population age structure and fertility',
-    affectedNodes: ['fertility', 'aging']
+  fertility_decline: {
+    label: 'Fertility Decline Momentum',
+    description: 'Self-reinforcing decline in birth rates',
+    affectedNodes: ['fertility', 'aging'],
+    isAccelerating: true
   },
-  income_distribution: {
-    label: 'Income Distribution',
-    description: 'Spread of income across population segments',
-    affectedNodes: ['income', 'consumption', 'capital']
+  dependency_ratio_stress: {
+    label: 'Dependency Ratio Stress',
+    description: 'Rising ratio of dependents to working-age population',
+    affectedNodes: ['aging', 'fiscal'],
+    isAccelerating: true
   },
-  consumption_patterns: {
-    label: 'Consumption Patterns',
-    description: 'Aggregate consumer spending behavior',
-    affectedNodes: ['consumption', 'fiscal']
+  tax_base_erosion: {
+    label: 'Tax Base Erosion',
+    description: 'Shrinking revenue base from employment and consumption',
+    affectedNodes: ['fiscal', 'income'],
+    isAccelerating: true
   },
-  workforce_participation: {
-    label: 'Workforce Participation',
-    description: 'Share of population actively engaged in labor',
-    affectedNodes: ['labor', 'aging', 'fiscal']
+  welfare_system_strain: {
+    label: 'Welfare System Strain',
+    description: 'Growing gap between obligations and resources',
+    affectedNodes: ['fiscal', 'aging'],
+    isAccelerating: true
+  },
+  policy_paralysis: {
+    label: 'Policy Paralysis',
+    description: 'Inability to implement structural reforms',
+    affectedNodes: ['fiscal', 'labor'],
+    isAccelerating: true
+  },
+  legitimacy_erosion: {
+    label: 'Legitimacy Erosion',
+    description: 'Declining trust in institutions and social contract',
+    affectedNodes: ['consumption', 'fertility'],
+    isAccelerating: true
+  },
+  redistribution_experimentation: {
+    label: 'Redistribution Experimentation',
+    description: 'Novel approaches to income and wealth redistribution',
+    affectedNodes: ['income', 'capital'],
+    isAccelerating: false
+  },
+  structural_adaptation: {
+    label: 'Structural Adaptation Capacity',
+    description: 'System flexibility and reform implementation',
+    affectedNodes: ['labor', 'fiscal'],
+    isAccelerating: false
   }
 };

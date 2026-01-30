@@ -4,10 +4,10 @@ export interface CountrySignalProfile {
   countryId: string;
   name: string;
   flag: string;
-  loopPressure: number; // 0-1
+  loopPressure: number;
   pressureTrend: 'increasing' | 'decreasing' | 'stable';
   categoryScores: Record<SignalCategory, {
-    score: number; // -1 to 1 (negative = stabilizing, positive = accelerating)
+    score: number;
     trend: 'up' | 'down' | 'stable';
   }>;
   riskFactors: string[];
@@ -22,14 +22,18 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
     loopPressure: 0.78,
     pressureTrend: 'increasing',
     categoryScores: {
-      automation_adoption: { score: 0.85, trend: 'up' },
-      labor_demand: { score: -0.6, trend: 'down' },
-      capital_efficiency: { score: 0.7, trend: 'up' },
-      fiscal_pressure: { score: 0.8, trend: 'up' },
-      demographic_shift: { score: 0.9, trend: 'up' },
-      income_distribution: { score: 0.3, trend: 'stable' },
-      consumption_patterns: { score: -0.4, trend: 'down' },
-      workforce_participation: { score: -0.5, trend: 'down' }
+      capital_labor_decoupling: { score: 0.7, trend: 'up' },
+      automation_substitution: { score: 0.85, trend: 'up' },
+      wage_compression: { score: 0.5, trend: 'stable' },
+      family_formation_friction: { score: 0.8, trend: 'up' },
+      fertility_decline: { score: 0.9, trend: 'up' },
+      dependency_ratio_stress: { score: 0.95, trend: 'up' },
+      tax_base_erosion: { score: 0.7, trend: 'up' },
+      welfare_system_strain: { score: 0.85, trend: 'up' },
+      policy_paralysis: { score: 0.6, trend: 'stable' },
+      legitimacy_erosion: { score: 0.3, trend: 'stable' },
+      redistribution_experimentation: { score: 0.4, trend: 'stable' },
+      structural_adaptation: { score: 0.3, trend: 'down' }
     },
     riskFactors: ['World\'s oldest population', 'Debt-to-GDP 260%', 'Labor shortage crisis'],
     stabilizingFactors: ['High automation readiness', 'Strong social cohesion']
@@ -41,14 +45,18 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
     loopPressure: 0.85,
     pressureTrend: 'increasing',
     categoryScores: {
-      automation_adoption: { score: 0.9, trend: 'up' },
-      labor_demand: { score: -0.5, trend: 'down' },
-      capital_efficiency: { score: 0.8, trend: 'up' },
-      fiscal_pressure: { score: 0.6, trend: 'up' },
-      demographic_shift: { score: 0.95, trend: 'up' },
-      income_distribution: { score: 0.5, trend: 'up' },
-      consumption_patterns: { score: -0.5, trend: 'down' },
-      workforce_participation: { score: -0.4, trend: 'down' }
+      capital_labor_decoupling: { score: 0.8, trend: 'up' },
+      automation_substitution: { score: 0.9, trend: 'up' },
+      wage_compression: { score: 0.6, trend: 'up' },
+      family_formation_friction: { score: 0.95, trend: 'up' },
+      fertility_decline: { score: 0.98, trend: 'up' },
+      dependency_ratio_stress: { score: 0.7, trend: 'up' },
+      tax_base_erosion: { score: 0.5, trend: 'up' },
+      welfare_system_strain: { score: 0.6, trend: 'up' },
+      policy_paralysis: { score: 0.5, trend: 'stable' },
+      legitimacy_erosion: { score: 0.4, trend: 'up' },
+      redistribution_experimentation: { score: 0.3, trend: 'stable' },
+      structural_adaptation: { score: 0.25, trend: 'down' }
     },
     riskFactors: ['0.7 fertility rate', 'Chaebol concentration', 'Youth unemployment'],
     stabilizingFactors: ['Tech infrastructure', 'Education investment']
@@ -60,14 +68,18 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
     loopPressure: 0.72,
     pressureTrend: 'increasing',
     categoryScores: {
-      automation_adoption: { score: 0.85, trend: 'up' },
-      labor_demand: { score: -0.3, trend: 'down' },
-      capital_efficiency: { score: 0.75, trend: 'up' },
-      fiscal_pressure: { score: 0.5, trend: 'up' },
-      demographic_shift: { score: 0.7, trend: 'up' },
-      income_distribution: { score: 0.4, trend: 'stable' },
-      consumption_patterns: { score: 0.2, trend: 'stable' },
-      workforce_participation: { score: -0.2, trend: 'down' }
+      capital_labor_decoupling: { score: 0.75, trend: 'up' },
+      automation_substitution: { score: 0.85, trend: 'up' },
+      wage_compression: { score: 0.4, trend: 'stable' },
+      family_formation_friction: { score: 0.7, trend: 'up' },
+      fertility_decline: { score: 0.75, trend: 'up' },
+      dependency_ratio_stress: { score: 0.6, trend: 'up' },
+      tax_base_erosion: { score: 0.4, trend: 'stable' },
+      welfare_system_strain: { score: 0.5, trend: 'up' },
+      policy_paralysis: { score: 0.3, trend: 'stable' },
+      legitimacy_erosion: { score: 0.35, trend: 'stable' },
+      redistribution_experimentation: { score: 0.5, trend: 'up' },
+      structural_adaptation: { score: 0.6, trend: 'stable' }
     },
     riskFactors: ['Demographic cliff by 2030', 'Property market stress', 'Youth employment crisis'],
     stabilizingFactors: ['State capacity', 'AI investment scale', 'Manufacturing base']
@@ -79,14 +91,18 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
     loopPressure: 0.52,
     pressureTrend: 'stable',
     categoryScores: {
-      automation_adoption: { score: 0.4, trend: 'stable' },
-      labor_demand: { score: -0.2, trend: 'stable' },
-      capital_efficiency: { score: 0.3, trend: 'stable' },
-      fiscal_pressure: { score: 0.5, trend: 'up' },
-      demographic_shift: { score: 0.4, trend: 'stable' },
-      income_distribution: { score: -0.2, trend: 'down' },
-      consumption_patterns: { score: 0.1, trend: 'stable' },
-      workforce_participation: { score: 0.1, trend: 'stable' }
+      capital_labor_decoupling: { score: 0.4, trend: 'stable' },
+      automation_substitution: { score: 0.45, trend: 'stable' },
+      wage_compression: { score: 0.3, trend: 'stable' },
+      family_formation_friction: { score: 0.5, trend: 'stable' },
+      fertility_decline: { score: 0.55, trend: 'stable' },
+      dependency_ratio_stress: { score: 0.6, trend: 'up' },
+      tax_base_erosion: { score: 0.4, trend: 'stable' },
+      welfare_system_strain: { score: 0.55, trend: 'up' },
+      policy_paralysis: { score: 0.5, trend: 'stable' },
+      legitimacy_erosion: { score: 0.45, trend: 'stable' },
+      redistribution_experimentation: { score: 0.6, trend: 'up' },
+      structural_adaptation: { score: 0.55, trend: 'up' }
     },
     riskFactors: ['Fragmented policy', 'Slow innovation adoption', 'Pension obligations'],
     stabilizingFactors: ['Strong welfare systems', 'Immigration buffer', 'AI regulation']
@@ -98,21 +114,24 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
     loopPressure: 0.65,
     pressureTrend: 'increasing',
     categoryScores: {
-      automation_adoption: { score: 0.75, trend: 'up' },
-      labor_demand: { score: -0.3, trend: 'stable' },
-      capital_efficiency: { score: 0.85, trend: 'up' },
-      fiscal_pressure: { score: 0.6, trend: 'up' },
-      demographic_shift: { score: 0.3, trend: 'stable' },
-      income_distribution: { score: 0.6, trend: 'up' },
-      consumption_patterns: { score: 0.2, trend: 'stable' },
-      workforce_participation: { score: 0.1, trend: 'stable' }
+      capital_labor_decoupling: { score: 0.85, trend: 'up' },
+      automation_substitution: { score: 0.75, trend: 'up' },
+      wage_compression: { score: 0.6, trend: 'up' },
+      family_formation_friction: { score: 0.5, trend: 'stable' },
+      fertility_decline: { score: 0.4, trend: 'stable' },
+      dependency_ratio_stress: { score: 0.45, trend: 'up' },
+      tax_base_erosion: { score: 0.5, trend: 'up' },
+      welfare_system_strain: { score: 0.4, trend: 'stable' },
+      policy_paralysis: { score: 0.7, trend: 'up' },
+      legitimacy_erosion: { score: 0.6, trend: 'up' },
+      redistribution_experimentation: { score: 0.35, trend: 'stable' },
+      structural_adaptation: { score: 0.4, trend: 'stable' }
     },
     riskFactors: ['Wealth inequality', 'Weak safety nets', 'Healthcare costs'],
     stabilizingFactors: ['Tech leadership', 'Immigration', 'Capital markets depth']
   }
 ];
 
-// Get pressure level category
 export function getPressureLevel(pressure: number): 'low' | 'moderate' | 'elevated' | 'high' | 'critical' {
   if (pressure < 0.3) return 'low';
   if (pressure < 0.5) return 'moderate';
@@ -121,7 +140,6 @@ export function getPressureLevel(pressure: number): 'low' | 'moderate' | 'elevat
   return 'critical';
 }
 
-// Get color class for pressure level
 export function getPressureColor(pressure: number): string {
   const level = getPressureLevel(pressure);
   switch (level) {

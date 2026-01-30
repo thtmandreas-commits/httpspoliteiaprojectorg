@@ -17,14 +17,30 @@ interface LiveSignalResponse {
     timestamp: number;
     affectedNodes: string[];
     weight: number;
-    sourceHint?: string;
   }>;
   aggregated: Record<string, {
     count: number;
     avgWeight: number;
     dominantDirection: 'increasing' | 'decreasing' | 'stable';
   }>;
+  privacy?: string;
 }
+
+// Valid categories in the new taxonomy
+const validCategories: SignalCategory[] = [
+  'capital_labor_decoupling',
+  'automation_substitution',
+  'wage_compression',
+  'family_formation_friction',
+  'fertility_decline',
+  'dependency_ratio_stress',
+  'tax_base_erosion',
+  'welfare_system_strain',
+  'policy_paralysis',
+  'legitimacy_erosion',
+  'redistribution_experimentation',
+  'structural_adaptation'
+];
 
 export function useLiveSignals() {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,16 +65,18 @@ export function useLiveSignals() {
         throw new Error('Failed to fetch signals');
       }
 
-      // Convert API signals to app Signal format
-      const signals: Signal[] = response.signals.map(s => ({
-        id: s.id,
-        category: s.category as SignalCategory,
-        direction: s.direction,
-        strength: s.strength,
-        timestamp: s.timestamp,
-        affectedNodes: s.affectedNodes,
-        weight: s.weight,
-      }));
+      // Convert API signals to app Signal format, filtering to valid categories
+      const signals: Signal[] = response.signals
+        .filter(s => validCategories.includes(s.category as SignalCategory))
+        .map(s => ({
+          id: s.id,
+          category: s.category as SignalCategory,
+          direction: s.direction,
+          strength: s.strength,
+          timestamp: s.timestamp,
+          affectedNodes: s.affectedNodes,
+          weight: s.weight,
+        }));
 
       setLiveSignals(signals);
       setLastFetched(response.timestamp);

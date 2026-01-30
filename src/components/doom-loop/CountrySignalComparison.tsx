@@ -8,7 +8,7 @@ import {
   getPressureColor,
   getPressureBgColor
 } from '@/data/countrySignals';
-import { signalCategoryMeta, SignalCategory } from '@/types/signals';
+import { signalCategoryMeta, signalDomains, SignalCategory } from '@/types/signals';
 import { TrendingUp, TrendingDown, Minus, ChevronRight, AlertTriangle, Shield, BarChart3 } from 'lucide-react';
 
 interface CountryCardProps {
@@ -40,7 +40,6 @@ function CountryCard({ profile, isSelected, onClick }: CountryCardProps) {
               <span className="font-medium text-sm">{profile.name}</span>
               <div className={cn('flex items-center gap-1 text-xs font-medium', getPressureColor(profile.loopPressure))}>
                 <TrendIcon className="w-3 h-3" />
-                {pressurePercent}%
               </div>
             </div>
             <div className="mt-1.5">
@@ -64,61 +63,45 @@ function CountryCard({ profile, isSelected, onClick }: CountryCardProps) {
   );
 }
 
-interface CategoryBarProps {
-  category: SignalCategory;
-  score: number;
-  trend: 'up' | 'down' | 'stable';
+interface DomainHeatmapProps {
+  profile: CountrySignalProfile;
+  domain: { label: string; categories: SignalCategory[] };
 }
 
-function CategoryBar({ category, score, trend }: CategoryBarProps) {
-  const meta = signalCategoryMeta[category];
-  const absScore = Math.abs(score);
-  const isPositive = score > 0;
-  
-  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
-  
+function DomainHeatmap({ profile, domain }: DomainHeatmapProps) {
   return (
-    <div className="py-1.5">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] text-muted-foreground truncate flex-1">{meta.label}</span>
-        <div className="flex items-center gap-1">
-          <TrendIcon className="w-2.5 h-2.5 text-muted-foreground" />
-          <span className={cn(
-            'text-[10px] font-medium',
-            isPositive ? 'text-flow-accelerating' : 'text-flow-stabilizing'
-          )}>
-            {isPositive ? '+' : ''}{Math.round(score * 100)}%
-          </span>
-        </div>
+    <div className="mb-2">
+      <div className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider mb-1">
+        {domain.label}
       </div>
-      <div className="h-1 bg-muted rounded-full overflow-hidden flex">
-        {/* Center line indicator */}
-        <div className="flex-1 flex justify-end">
-          {!isPositive && (
+      <div className="grid grid-cols-3 gap-1">
+        {domain.categories.map(cat => {
+          const score = profile.categoryScores[cat];
+          const meta = signalCategoryMeta[cat];
+          const isStress = meta.isAccelerating;
+          
+          // Score > 0.5 = concerning for stress categories, positive for adaptation
+          const intensity = score.score;
+          const colorClass = isStress 
+            ? (intensity > 0.6 ? 'bg-flow-accelerating' : intensity > 0.4 ? 'bg-status-stressed' : 'bg-muted-foreground')
+            : (intensity > 0.4 ? 'bg-flow-stabilizing' : 'bg-muted-foreground');
+          
+          return (
             <div 
-              className="h-full bg-flow-stabilizing rounded-l-full"
-              style={{ width: `${absScore * 100}%` }}
+              key={cat}
+              className={cn('h-4 rounded-sm', colorClass)}
+              style={{ opacity: 0.3 + intensity * 0.6 }}
+              title={`${meta.label}: ${score.trend}`}
             />
-          )}
-        </div>
-        <div className="w-px bg-border" />
-        <div className="flex-1">
-          {isPositive && (
-            <div 
-              className="h-full bg-flow-accelerating rounded-r-full"
-              style={{ width: `${absScore * 100}%` }}
-            />
-          )}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 function CountryDetail({ profile }: { profile: CountrySignalProfile }) {
-  const pressurePercent = Math.round(profile.loopPressure * 100);
   const level = getPressureLevel(profile.loopPressure);
-  const categories = Object.keys(signalCategoryMeta) as SignalCategory[];
   
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-right-2">
@@ -129,8 +112,7 @@ function CountryDetail({ profile }: { profile: CountrySignalProfile }) {
           <h4 className="font-semibold">{profile.name}</h4>
           <div className={cn('flex items-center gap-1.5 text-sm', getPressureColor(profile.loopPressure))}>
             <BarChart3 className="w-3.5 h-3.5" />
-            <span className="font-medium">{pressurePercent}%</span>
-            <span className="text-xs capitalize">({level})</span>
+            <span className="capitalize">{level} pressure</span>
           </div>
         </div>
       </div>
@@ -139,41 +121,33 @@ function CountryDetail({ profile }: { profile: CountrySignalProfile }) {
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div 
           className={cn('h-full rounded-full transition-all', getPressureBgColor(profile.loopPressure))}
-          style={{ width: `${pressurePercent}%` }}
+          style={{ width: `${profile.loopPressure * 100}%` }}
         />
       </div>
 
-      {/* Category Breakdown */}
-      <div>
-        <div className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
-          <BarChart3 className="w-3 h-3" />
-          Signal Categories
-        </div>
-        <Card>
-          <CardContent className="p-3">
-            <div className="space-y-1">
-              {categories.map(cat => (
-                <CategoryBar 
-                  key={cat}
-                  category={cat}
-                  score={profile.categoryScores[cat].score}
-                  trend={profile.categoryScores[cat].trend}
-                />
-              ))}
+      {/* Domain Heatmaps */}
+      <Card>
+        <CardContent className="p-3">
+          <div className="text-xs font-medium mb-2">Signal Profile</div>
+          {Object.entries(signalDomains).map(([key, domain]) => (
+            <DomainHeatmap key={key} profile={profile} domain={domain} />
+          ))}
+          <div className="flex items-center justify-center gap-4 mt-3 pt-2 border-t text-[9px] text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-flow-accelerating opacity-70" />
+              Stress
             </div>
-            <div className="flex items-center justify-center gap-4 mt-3 pt-2 border-t text-[10px] text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-flow-stabilizing" />
-                Stabilizing
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-flow-accelerating" />
-                Accelerating
-              </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-muted-foreground opacity-50" />
+              Neutral
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-flow-stabilizing opacity-70" />
+              Adapting
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Risk & Stabilizing Factors */}
       <div className="grid grid-cols-2 gap-2">
