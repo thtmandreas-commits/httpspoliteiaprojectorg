@@ -88,10 +88,19 @@ export function LoopScreen({
         hasSignalData={aggregatedSignals.length > 0}
       />
       
-      {/* Loop Cards */}
-      <div className="space-y-2">
+      {/* Loop Cards with radial background emphasis */}
+      <div className="space-y-2 relative">
+        {/* Subtle radial gradient for visual gravity */}
+        <div 
+          className="absolute inset-0 -z-10 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at center top, hsl(40 20% 94% / 0.8) 0%, transparent 70%)',
+            transform: 'translateY(-20px)',
+          }}
+        />
+        
         <h3 className="text-sm font-semibold text-muted-foreground">The Feedback Loop</h3>
-        <div className="grid gap-2">
+        <div className="grid gap-2.5">
           {orderedNodes.map((node, index) => (
             <div key={node.id} className="relative">
               <LoopCard 
@@ -99,14 +108,19 @@ export function LoopScreen({
                 stressLevel={nodeStressMap[node.id]}
               />
               {index < orderedNodes.length - 1 && (
-                <div className="absolute left-1/2 -bottom-1 w-0.5 h-2 bg-border" />
+                <div 
+                  className="absolute left-1/2 -bottom-1.5 w-px h-2.5 opacity-30"
+                  style={{
+                    background: 'linear-gradient(to bottom, hsl(var(--border)), transparent)'
+                  }}
+                />
               )}
             </div>
           ))}
         </div>
         {/* Loop indicator - connects back to start */}
-        <div className="flex justify-center">
-          <div className="text-xs text-muted-foreground italic">↻ Loop reinforces</div>
+        <div className="flex justify-center pt-1">
+          <div className="text-xs text-muted-foreground/60 italic tracking-wide">↻ Loop reinforces</div>
         </div>
       </div>
 

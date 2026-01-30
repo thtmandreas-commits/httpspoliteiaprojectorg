@@ -49,7 +49,13 @@ export function TensionGauge({
   const config = levelConfig[level];
   
   return (
-    <div className={cn('p-4 rounded-lg bg-card border', className)}>
+    <div className={cn(
+      'p-4 rounded-lg bg-card border transition-all',
+      'shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_1px_3px_0_rgba(0,0,0,0.04)]',
+      level === 'critical' && 'border-status-critical/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.5),0_2px_8px_0_rgba(239,68,68,0.08)]',
+      level === 'stressed' && 'border-status-stressed/20',
+      className
+    )}>
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium">System Tension</span>
         <span className={cn('text-sm font-semibold', config.textColor)}>
@@ -57,18 +63,22 @@ export function TensionGauge({
         </span>
       </div>
       
-      {/* Main tension bar */}
-      <div className="h-3 bg-muted rounded-full overflow-hidden mb-2">
+      {/* Main tension bar with depth */}
+      <div className="h-3 bg-muted rounded-full overflow-hidden mb-2 shadow-inner">
         <div
-          className={cn('h-full transition-all duration-700 ease-out', config.color)}
+          className={cn(
+            'h-full transition-all duration-700 ease-out',
+            config.color,
+            level === 'critical' && 'shadow-[0_0_8px_rgba(239,68,68,0.4)]'
+          )}
           style={{ width: `${tension * 100}%` }}
         />
       </div>
       
       <div className="flex justify-between text-xs text-muted-foreground">
-        <span>0%</span>
-        <span className={config.textColor}>{config.description}</span>
-        <span>100%</span>
+        <span className="opacity-60">0%</span>
+        <span className={cn(config.textColor, 'font-medium')}>{config.description}</span>
+        <span className="opacity-60">100%</span>
       </div>
 
       {/* Signal pressure indicator - only show when signal data exists */}

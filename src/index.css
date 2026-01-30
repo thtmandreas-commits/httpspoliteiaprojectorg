@@ -6,13 +6,14 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    /* Warm off-white backgrounds for reduced flatness */
+    --background: 40 15% 97%;
     --foreground: 220 15% 15%;
 
-    --card: 0 0% 100%;
+    --card: 40 12% 99%;
     --card-foreground: 220 15% 15%;
 
-    --popover: 0 0% 100%;
+    --popover: 40 12% 99%;
     --popover-foreground: 220 15% 15%;
 
     --primary: 220 60% 45%;
