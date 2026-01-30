@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
-import { Activity, User, Globe, ShieldAlert, Newspaper } from 'lucide-react';
+import { Activity, User, Globe, ShieldAlert, Newspaper, Info } from 'lucide-react';
 
-type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now';
+type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now' | 'about';
 
 interface NavigationProps {
   activeTab: TabId;
@@ -15,6 +15,7 @@ const tabs = [
   { id: 'countries' as TabId, icon: Globe, label: 'Countries' },
   { id: 'interventions' as TabId, icon: ShieldAlert, label: 'Interventions' },
   { id: 'now' as TabId, icon: Newspaper, label: 'Now' },
+  { id: 'about' as TabId, icon: Info, label: 'About' },
 ];
 
 export function Navigation({ activeTab, onTabChange, className }: NavigationProps) {
@@ -26,7 +27,7 @@ export function Navigation({ activeTab, onTabChange, className }: NavigationProp
             key={id}
             onClick={() => onTabChange(id)}
             className={cn(
-              'flex flex-col items-center justify-center gap-1 px-3 py-2 transition-colors',
+              'flex flex-col items-center justify-center gap-1 px-2 py-2 transition-colors',
               activeTab === id
                 ? 'text-primary'
                 : 'text-muted-foreground hover:text-foreground'

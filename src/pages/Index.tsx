@@ -6,13 +6,14 @@ import { YouScreen } from '@/components/doom-loop/YouScreen';
 import { CountriesScreen } from '@/components/doom-loop/CountriesScreen';
 import { InterventionsScreen } from '@/components/doom-loop/InterventionsScreen';
 import { NowScreen } from '@/components/doom-loop/NowScreen';
+import { AboutScreen } from '@/components/doom-loop/AboutScreen';
 import { Navigation } from '@/components/doom-loop/Navigation';
 import { BrandHeader } from '@/components/doom-loop/BrandHeader';
 import { AdPlaceholder } from '@/components/doom-loop/AdPlaceholder';
 import { CountryScenario } from '@/types/simulation';
 import { Signal } from '@/types/signals';
 
-type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now';
+type TabId = 'loop' | 'you' | 'countries' | 'interventions' | 'now' | 'about';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabId>('loop');
@@ -44,8 +45,8 @@ const Index = () => {
     addLiveSignals(newSignals);
   }, [addLiveSignals]);
 
-  // Show prominent branding on Loop and Now screens
-  const showBrandHeader = activeTab === 'loop' || activeTab === 'now';
+  // Show prominent branding on Loop, Now, and About screens
+  const showBrandHeader = activeTab === 'loop' || activeTab === 'now' || activeTab === 'about';
   // Show trust badge only on Loop screen (first impression)
   const showTrustBadge = activeTab === 'loop';
 
@@ -111,12 +112,20 @@ const Index = () => {
             <AdPlaceholder variant="block" className="mt-6" />
           </div>
         )}
+
+        {activeTab === 'about' && (
+          <div className="animate-in fade-in">
+            <AboutScreen />
+          </div>
+        )}
       </main>
 
-      {/* Ad Banner - Fixed above navigation */}
-      <div className="fixed bottom-16 left-0 right-0 z-30">
-        <AdPlaceholder variant="banner" />
-      </div>
+      {/* Ad Banner - Fixed above navigation (not shown on About) */}
+      {activeTab !== 'about' && (
+        <div className="fixed bottom-16 left-0 right-0 z-30">
+          <AdPlaceholder variant="banner" />
+        </div>
+      )}
 
       {/* Bottom Navigation */}
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
