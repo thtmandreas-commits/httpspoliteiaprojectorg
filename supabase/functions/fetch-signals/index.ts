@@ -179,7 +179,7 @@ async function fetchRSSFeeds(): Promise<FeedResult> {
     'https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml',
     // Labor & work
     'https://feeds.bbci.co.uk/news/education/rss.xml',
-    'https://rss.nytimes.com/services/xml/rss/nyt/JobMarket.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/YourMoney.xml',
     // Demographics & society
     'https://feeds.bbci.co.uk/news/health/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml',
@@ -215,6 +215,8 @@ async function fetchRSSFeeds(): Promise<FeedResult> {
         allItems.push(...sliced);
         sourceBreakdown[label] = (sourceBreakdown[label] || 0) + sliced.length;
       } else {
+        console.error(`Feed returned ${response.status}: ${feedUrl}`);
+        await response.text(); // consume body
         feedsFailed++;
       }
     } catch (error) {
