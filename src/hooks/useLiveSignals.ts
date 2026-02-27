@@ -3,6 +3,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { Signal, SignalCategory } from '@/types/signals';
 import { toast } from 'sonner';
 
+interface FeedStats {
+  totalFeeds: number;
+  feedsResponded: number;
+  feedsFailed: number;
+  sourceBreakdown: Record<string, number>;
+}
+
 interface LiveSignalResponse {
   success: boolean;
   timestamp: number;
@@ -23,6 +30,7 @@ interface LiveSignalResponse {
     avgWeight: number;
     dominantDirection: 'increasing' | 'decreasing' | 'stable';
   }>;
+  feedStats?: FeedStats;
   privacy?: string;
 }
 
@@ -46,6 +54,7 @@ export function useLiveSignals() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastFetched, setLastFetched] = useState<number | null>(null);
   const [liveSignals, setLiveSignals] = useState<Signal[]>([]);
+  const [feedStats, setFeedStats] = useState<FeedStats | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchLiveSignals = useCallback(async () => {
@@ -80,6 +89,9 @@ export function useLiveSignals() {
 
       setLiveSignals(signals);
       setLastFetched(response.timestamp);
+      if (response.feedStats) {
+        setFeedStats(response.feedStats);
+      }
       
       toast.success(`Ingested ${signals.length} signals from ${response.totalItemsScanned} sources`);
 
@@ -87,6 +99,7 @@ export function useLiveSignals() {
         signals,
         totalScanned: response.totalItemsScanned,
         categoriesFound: response.categoriesFound,
+        feedStats: response.feedStats,
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch live signals';
@@ -102,6 +115,7 @@ export function useLiveSignals() {
     liveSignals,
     isLoading,
     lastFetched,
+    feedStats,
     error,
     fetchLiveSignals,
   };
