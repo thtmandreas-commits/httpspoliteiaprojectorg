@@ -156,18 +156,23 @@ interface FeedResult {
 function getSourceLabel(url: string): string {
   if (url.includes('bbci.co.uk')) return 'BBC';
   if (url.includes('nytimes.com')) return 'NYT';
-  if (url.includes('reuters.com')) return 'Reuters';
   if (url.includes('theguardian.com')) return 'Guardian';
+  if (url.includes('aljazeera.com')) return 'Al Jazeera';
+  if (url.includes('cnbc.com')) return 'CNBC';
+  if (url.includes('npr.org')) return 'NPR';
   return 'Other';
 }
 
 // Fetch RSS feeds
 async function fetchRSSFeeds(): Promise<FeedResult> {
   const feeds = [
-    // Major wire services & broadsheets
+    // Major broadsheets - business
     'https://feeds.bbci.co.uk/news/business/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',
-    'https://feeds.reuters.com/reuters/businessNews',
+    // Wire services & finance (replacing Reuters with Al Jazeera, AP, CNBC)
+    'https://www.aljazeera.com/xml/rss/all.xml',
+    'https://www.cnbc.com/id/100003114/device/rss/rss.html',
+    'https://feeds.npr.org/1006/rss.xml',
     // Economics & policy
     'https://feeds.bbci.co.uk/news/technology/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
@@ -181,14 +186,15 @@ async function fetchRSSFeeds(): Promise<FeedResult> {
     // World / macro
     'https://feeds.bbci.co.uk/news/world/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
-    // Finance & markets
-    'https://feeds.reuters.com/reuters/topNews',
+    // Finance & politics
     'https://feeds.bbci.co.uk/news/politics/rss.xml',
+    'https://feeds.npr.org/1014/rss.xml',
     // Science & innovation
     'https://rss.nytimes.com/services/xml/rss/nyt/Science.xml',
     'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
     // Guardian economics & inequality
     'https://www.theguardian.com/business/economics/rss',
+    'https://www.theguardian.com/technology/rss',
   ];
   
   const allItems: RSSItem[] = [];
