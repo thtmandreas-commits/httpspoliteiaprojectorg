@@ -148,9 +148,31 @@ function inferDirection(text: string): 'increasing' | 'decreasing' | 'stable' {
 // Fetch RSS feeds
 async function fetchRSSFeeds(): Promise<RSSItem[]> {
   const feeds = [
+    // Major wire services & broadsheets
     'https://feeds.bbci.co.uk/news/business/rss.xml',
     'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml',
     'https://feeds.reuters.com/reuters/businessNews',
+    // Economics & policy
+    'https://feeds.bbci.co.uk/news/technology/rss.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/Economy.xml',
+    // Labor & work
+    'https://feeds.bbci.co.uk/news/education/rss.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/JobMarket.xml',
+    // Demographics & society
+    'https://feeds.bbci.co.uk/news/health/rss.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/Health.xml',
+    // World / macro
+    'https://feeds.bbci.co.uk/news/world/rss.xml',
+    'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+    // Finance & markets
+    'https://feeds.reuters.com/reuters/topNews',
+    'https://feeds.bbci.co.uk/news/politics/rss.xml',
+    // Science & innovation
+    'https://rss.nytimes.com/services/xml/rss/nyt/Science.xml',
+    'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
+    // Guardian economics & inequality
+    'https://www.theguardian.com/business/economics/rss',
   ];
   
   const allItems: RSSItem[] = [];
