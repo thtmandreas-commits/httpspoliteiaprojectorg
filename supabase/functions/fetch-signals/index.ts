@@ -27,51 +27,51 @@ const signalClassifiers: Record<SignalCategory, {
   affectedNodes: string[];
 }> = {
   capital_labor_decoupling: {
-    keywords: ['profit margin', 'shareholder return', 'capital gains', 'dividend', 'buyback', 'wealth gap', 'top 1%', 'billionaire', 'stock surge'],
+    keywords: ['profit margin', 'shareholder return', 'capital gains', 'dividend', 'buyback', 'wealth gap', 'top 1%', 'billionaire', 'stock surge', 'corporate profit', 'wealth inequality', 'income inequality', 'executive pay', 'ceo compensation', 'stock market record', 'market cap', 'private equity', 'hedge fund', 'asset price', 'wealth concentration', 'capital return', 'earnings beat', 'record profit', 'investor return', 'equity market'],
     affectedNodes: ['capital', 'income']
   },
   automation_substitution: {
-    keywords: ['ai replace', 'robot', 'automate', 'machine learning', 'chatgpt', 'artificial intelligence', 'autonomous', 'gpt', 'neural', 'algorithm'],
+    keywords: ['ai replace', 'robot', 'automate', 'machine learning', 'chatgpt', 'artificial intelligence', 'autonomous', 'gpt', 'neural', 'algorithm', 'generative ai', 'large language model', 'llm', 'deep learning', 'computer vision', 'self-driving', 'job automation', 'ai model', 'openai', 'anthropic', 'gemini', 'copilot', 'ai tool', 'ai agent', 'workforce automation', 'robotic process', 'rpa', 'ai startup', 'tech layoff', 'coding assistant', 'ai chip', 'gpu demand'],
     affectedNodes: ['ai', 'labor']
   },
   wage_compression: {
-    keywords: ['wage stagnant', 'salary cut', 'pay freeze', 'income decline', 'real wage', 'purchasing power', 'minimum wage', 'wage gap'],
+    keywords: ['wage stagnant', 'salary cut', 'pay freeze', 'income decline', 'real wage', 'purchasing power', 'minimum wage', 'wage gap', 'wage growth', 'pay gap', 'earnings decline', 'take-home pay', 'wage squeeze', 'low pay', 'gig economy', 'zero hour', 'contract work', 'freelance', 'income stagnation', 'paycheck', 'hourly wage', 'living wage', 'wage theft', 'compensation', 'labor cost'],
     affectedNodes: ['income', 'consumption']
   },
   family_formation_friction: {
-    keywords: ['housing afford', 'rent crisis', 'marriage rate', 'young adult', 'cost of living', 'student debt', 'childcare cost', 'housing cost'],
+    keywords: ['housing afford', 'rent crisis', 'marriage rate', 'young adult', 'cost of living', 'student debt', 'childcare cost', 'housing cost', 'first-time buyer', 'mortgage rate', 'rent increase', 'housing shortage', 'property price', 'student loan', 'household debt', 'millennial', 'gen z', 'starter home', 'unaffordable', 'housing market', 'home ownership', 'rental market', 'eviction', 'homelessness', 'shelter cost', 'daycare', 'preschool cost'],
     affectedNodes: ['fertility', 'consumption']
   },
   fertility_decline: {
-    keywords: ['birth rate', 'fertility', 'population decline', 'baby bust', 'childless', 'demographic decline', 'below replacement'],
+    keywords: ['birth rate', 'fertility', 'population decline', 'baby bust', 'childless', 'demographic decline', 'below replacement', 'population shrink', 'fewer babies', 'demographic crisis', 'total fertility rate', 'natalist', 'pro-natalist', 'population aging', 'depopulation', 'demographic winter', 'empty cradle', 'reproductive', 'family size', 'one-child'],
     affectedNodes: ['fertility', 'aging']
   },
   dependency_ratio_stress: {
-    keywords: ['aging population', 'elderly care', 'pension crisis', 'retirement age', 'dependency ratio', 'working age', 'retiree'],
+    keywords: ['aging population', 'elderly care', 'pension crisis', 'retirement age', 'dependency ratio', 'working age', 'retiree', 'old age', 'senior care', 'nursing home', 'geriatric', 'aged care', 'grey economy', 'silver tsunami', 'demographic time bomb', 'retirement fund', 'social care', 'dementia', 'elder care', 'workforce shrink', 'labor shortage', 'worker shortage'],
     affectedNodes: ['aging', 'fiscal']
   },
   tax_base_erosion: {
-    keywords: ['tax revenue', 'fiscal deficit', 'tax base', 'corporate tax', 'tax evasion', 'offshore', 'budget shortfall'],
+    keywords: ['tax revenue', 'fiscal deficit', 'tax base', 'corporate tax', 'tax evasion', 'offshore', 'budget shortfall', 'tax avoidance', 'tax haven', 'national debt', 'government debt', 'sovereign debt', 'deficit spending', 'debt ceiling', 'fiscal cliff', 'austerity', 'bond yield', 'credit rating', 'downgrade', 'treasury', 'government borrowing', 'public debt', 'fiscal gap', 'budget deficit', 'tax reform'],
     affectedNodes: ['fiscal', 'income']
   },
   welfare_system_strain: {
-    keywords: ['social security', 'medicare', 'welfare cut', 'benefit reduction', 'entitlement', 'safety net', 'pension fund'],
+    keywords: ['social security', 'medicare', 'welfare cut', 'benefit reduction', 'entitlement', 'safety net', 'pension fund', 'medicaid', 'food stamp', 'snap benefit', 'universal healthcare', 'nhs', 'public health', 'welfare state', 'social protection', 'disability benefit', 'unemployment benefit', 'social insurance', 'welfare reform', 'healthcare cost', 'insurance premium', 'out of pocket', 'health spending'],
     affectedNodes: ['fiscal', 'aging']
   },
   policy_paralysis: {
-    keywords: ['gridlock', 'partisan', 'reform fail', 'legislation stall', 'congress block', 'political deadlock', 'veto'],
+    keywords: ['gridlock', 'partisan', 'reform fail', 'legislation stall', 'congress block', 'political deadlock', 'veto', 'filibuster', 'government shutdown', 'political crisis', 'coalition collapse', 'no confidence', 'impeach', 'polariz', 'divided government', 'hung parliament', 'minority government', 'political instability', 'election uncertainty', 'policy uncertainty', 'regulation delay', 'bureaucracy'],
     affectedNodes: ['fiscal', 'labor']
   },
   legitimacy_erosion: {
-    keywords: ['trust decline', 'institution', 'approval rating', 'protest', 'discontent', 'populist', 'anti-establishment', 'distrust'],
+    keywords: ['trust decline', 'institution', 'approval rating', 'protest', 'discontent', 'populist', 'anti-establishment', 'distrust', 'corruption', 'scandal', 'misinformation', 'disinformation', 'fake news', 'conspiracy', 'civil unrest', 'riot', 'strike action', 'demonstration', 'social unrest', 'public anger', 'voter turnout', 'democratic backsliding', 'authoritarian', 'censorship', 'freedom of press'],
     affectedNodes: ['consumption', 'fertility']
   },
   redistribution_experimentation: {
-    keywords: ['universal basic', 'ubi', 'wealth tax', 'guaranteed income', 'pilot program', 'social dividend', 'basic income'],
+    keywords: ['universal basic', 'ubi', 'wealth tax', 'guaranteed income', 'pilot program', 'social dividend', 'basic income', 'carbon tax', 'windfall tax', 'excess profit tax', 'inheritance tax', 'estate tax', 'progressive tax', 'land value tax', 'guaranteed job', 'job guarantee', 'public investment', 'stimulus check', 'cash transfer', 'sovereign wealth fund', 'reparation'],
     affectedNodes: ['income', 'capital']
   },
   structural_adaptation: {
-    keywords: ['reform pass', 'policy success', 'breakthrough', 'bipartisan', 'innovation policy', 'retraining program', 'skills initiative'],
+    keywords: ['reform pass', 'policy success', 'breakthrough', 'bipartisan', 'innovation policy', 'retraining program', 'skills initiative', 'green transition', 'industrial policy', 'infrastructure bill', 'education reform', 'vocational training', 'apprenticeship', 'upskilling', 'reskilling', 'digital literacy', 'stem education', 'trade agreement', 'supply chain', 'reshoring', 'nearshoring', 'climate adaptation', 'energy transition', 'renewable energy'],
     affectedNodes: ['labor', 'fiscal']
   }
 };
