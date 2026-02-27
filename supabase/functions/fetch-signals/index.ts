@@ -145,8 +145,24 @@ function inferDirection(text: string): 'increasing' | 'decreasing' | 'stable' {
   return 'stable';
 }
 
+interface FeedResult {
+  totalFeeds: number;
+  feedsResponded: number;
+  feedsFailed: number;
+  items: RSSItem[];
+  sourceBreakdown: Record<string, number>; // source label -> item count
+}
+
+function getSourceLabel(url: string): string {
+  if (url.includes('bbci.co.uk')) return 'BBC';
+  if (url.includes('nytimes.com')) return 'NYT';
+  if (url.includes('reuters.com')) return 'Reuters';
+  if (url.includes('theguardian.com')) return 'Guardian';
+  return 'Other';
+}
+
 // Fetch RSS feeds
-async function fetchRSSFeeds(): Promise<RSSItem[]> {
+async function fetchRSSFeeds(): Promise<FeedResult> {
   const feeds = [
     // Major wire services & broadsheets
     'https://feeds.bbci.co.uk/news/business/rss.xml',
@@ -176,8 +192,11 @@ async function fetchRSSFeeds(): Promise<RSSItem[]> {
   ];
   
   const allItems: RSSItem[] = [];
+  const sourceBreakdown: Record<string, number> = {};
+  let feedsFailed = 0;
   
   for (const feedUrl of feeds) {
+    const label = getSourceLabel(feedUrl);
     try {
       const response = await fetch(feedUrl, {
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SignalEngine/1.0)' },
@@ -186,14 +205,25 @@ async function fetchRSSFeeds(): Promise<RSSItem[]> {
       if (response.ok) {
         const xml = await response.text();
         const items = parseRSS(xml);
-        allItems.push(...items.slice(0, 10));
+        const sliced = items.slice(0, 10);
+        allItems.push(...sliced);
+        sourceBreakdown[label] = (sourceBreakdown[label] || 0) + sliced.length;
+      } else {
+        feedsFailed++;
       }
     } catch (error) {
       console.error(`Failed to fetch ${feedUrl}:`, error);
+      feedsFailed++;
     }
   }
   
-  return allItems;
+  return {
+    totalFeeds: feeds.length,
+    feedsResponded: feeds.length - feedsFailed,
+    feedsFailed,
+    items: allItems,
+    sourceBreakdown,
+  };
 }
 
 serve(async (req) => {
@@ -203,13 +233,13 @@ serve(async (req) => {
 
   try {
     console.log('Fetching RSS feeds...');
-    const items = await fetchRSSFeeds();
-    console.log(`Fetched ${items.length} items`);
+    const feedResult = await fetchRSSFeeds();
+    console.log(`Fetched ${feedResult.items.length} items from ${feedResult.feedsResponded}/${feedResult.totalFeeds} feeds`);
     
     // Classify into signals (raw content discarded immediately)
     const signals: ClassifiedSignal[] = [];
     
-    for (const item of items) {
+    for (const item of feedResult.items) {
       const text = `${item.title} ${item.description || ''}`;
       const classification = classifyContent(text);
       
@@ -256,11 +286,17 @@ serve(async (req) => {
     const result = {
       success: true,
       timestamp: Date.now(),
-      totalItemsScanned: items.length,
+      totalItemsScanned: feedResult.items.length,
       signalsDetected: signals.length,
       categoriesFound: Object.keys(aggregated).length,
       signals,
       aggregated,
+      feedStats: {
+        totalFeeds: feedResult.totalFeeds,
+        feedsResponded: feedResult.feedsResponded,
+        feedsFailed: feedResult.feedsFailed,
+        sourceBreakdown: feedResult.sourceBreakdown,
+      },
       privacy: 'No raw headlines stored. All content classified and immediately discarded.'
     };
     

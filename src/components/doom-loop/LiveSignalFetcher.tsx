@@ -3,7 +3,7 @@ import { useLiveSignals } from '@/hooks/useLiveSignals';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { RefreshCw, Wifi, WifiOff, Clock, Zap, Play, Pause } from 'lucide-react';
+import { RefreshCw, Wifi, WifiOff, Clock, Zap, Play, Pause, Radio } from 'lucide-react';
 import { Signal } from '@/types/signals';
 
 const AUTO_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -13,7 +13,7 @@ interface LiveSignalFetcherProps {
 }
 
 export function LiveSignalFetcher({ onSignalsReceived }: LiveSignalFetcherProps) {
-  const { isLoading, lastFetched, error, fetchLiveSignals, liveSignals } = useLiveSignals();
+  const { isLoading, lastFetched, error, fetchLiveSignals, liveSignals, feedStats } = useLiveSignals();
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [nextRefreshIn, setNextRefreshIn] = useState<number | null>(null);
 
@@ -146,7 +146,7 @@ export function LiveSignalFetcher({ onSignalsReceived }: LiveSignalFetcherProps)
         )}
 
         {liveSignals.length > 0 && !error && (
-          <div className="mt-2 pt-2 border-t">
+          <div className="mt-2 pt-2 border-t space-y-2">
             <div className="flex items-center justify-between text-[10px]">
               <span className="text-muted-foreground">
                 {liveSignals.length} signals ingested
@@ -156,6 +156,35 @@ export function LiveSignalFetcher({ onSignalsReceived }: LiveSignalFetcherProps)
                 <span>{autoRefresh ? 'Auto-connected' : 'Connected'}</span>
               </div>
             </div>
+            
+            {/* Source diversity stats */}
+            {feedStats && (
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <Radio className="w-3 h-3" />
+                  <span>
+                    {feedStats.feedsResponded}/{feedStats.totalFeeds} feeds responded
+                    {feedStats.feedsFailed > 0 && (
+                      <span className="text-destructive/70"> · {feedStats.feedsFailed} failed</span>
+                    )}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {Object.entries(feedStats.sourceBreakdown)
+                    .sort(([,a], [,b]) => b - a)
+                    .map(([source, count]) => (
+                      <span 
+                        key={source}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-muted text-[10px] font-medium text-muted-foreground"
+                      >
+                        {source}
+                        <span className="text-foreground/70">{count}</span>
+                      </span>
+                    ))
+                  }
+                </div>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
