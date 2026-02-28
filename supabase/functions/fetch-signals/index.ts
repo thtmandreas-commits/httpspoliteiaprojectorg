@@ -17,6 +17,7 @@ type SignalCategory =
   | 'welfare_system_strain'
   | 'policy_paralysis'
   | 'legitimacy_erosion'
+  | 'deflationary_pressure'
   | 'redistribution_experimentation'
   | 'structural_adaptation';
 
@@ -69,6 +70,10 @@ const signalClassifiers: Record<SignalCategory, {
   redistribution_experimentation: {
     keywords: ['universal basic', 'ubi', 'wealth tax', 'guaranteed income', 'pilot program', 'social dividend', 'basic income', 'carbon tax', 'windfall tax', 'excess profit tax', 'inheritance tax', 'estate tax', 'progressive tax', 'land value tax', 'guaranteed job', 'job guarantee', 'public investment', 'stimulus check', 'cash transfer', 'sovereign wealth fund', 'reparation'],
     affectedNodes: ['income', 'capital']
+  },
+  deflationary_pressure: {
+    keywords: ['deflation', 'price drop', 'price decline', 'falling prices', 'price war', 'margin squeeze', 'margin compression', 'price collapse', 'disinflation', 'cheap', 'discount', 'price cut', 'cost reduction', 'lower prices', 'pricing pressure', 'commoditiz', 'race to bottom', 'zero marginal cost', 'free tier', 'price erosion', 'overcapacity', 'oversupply', 'deflationary spiral', 'debt deflation', 'real debt', 'nominal gdp', 'cpi decline', 'consumer prices fall'],
+    affectedNodes: ['capital', 'fiscal', 'consumption']
   },
   structural_adaptation: {
     keywords: ['reform pass', 'policy success', 'breakthrough', 'bipartisan', 'innovation policy', 'retraining program', 'skills initiative', 'green transition', 'industrial policy', 'infrastructure bill', 'education reform', 'vocational training', 'apprenticeship', 'upskilling', 'reskilling', 'digital literacy', 'stem education', 'trade agreement', 'supply chain', 'reshoring', 'nearshoring', 'climate adaptation', 'energy transition', 'renewable energy'],

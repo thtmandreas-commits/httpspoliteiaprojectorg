@@ -206,6 +206,28 @@ export const sampleSignals: Signal[] = [
   },
   
   // Some counter-signals for nuance
+  
+  // Price Domain
+  {
+    id: 's_deflation_1',
+    category: 'deflationary_pressure',
+    direction: 'increasing',
+    strength: 'moderate',
+    timestamp: Date.now() - DAY * 3,
+    affectedNodes: ['capital', 'fiscal', 'consumption'],
+    weight: 0.65
+  },
+  {
+    id: 's_deflation_2',
+    category: 'deflationary_pressure',
+    direction: 'increasing',
+    strength: 'weak',
+    timestamp: Date.now() - DAY * 18,
+    affectedNodes: ['capital', 'fiscal', 'consumption'],
+    weight: 0.4
+  },
+
+  // Some counter-signals for nuance
   {
     id: 's22',
     category: 'automation_substitution',
@@ -239,6 +261,7 @@ export function generateTimeWindowedSignals(signals: Signal[]): TimeWindowedSign
     'welfare_system_strain',
     'policy_paralysis',
     'legitimacy_erosion',
+    'deflationary_pressure',
     'redistribution_experimentation',
     'structural_adaptation'
   ];

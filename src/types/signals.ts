@@ -1,4 +1,4 @@
-// Signal Engine Types - Fixed 12-category taxonomy for loop variable modulation
+// Signal Engine Types - Fixed 13-category taxonomy for loop variable modulation
 // These categories represent system-level stress indicators, not news content
 
 export type SignalCategory = 
@@ -16,6 +16,8 @@ export type SignalCategory =
   // Political Domain
   | 'policy_paralysis'
   | 'legitimacy_erosion'
+  // Price Domain
+  | 'deflationary_pressure'
   // Adaptation Domain
   | 'redistribution_experimentation'
   | 'structural_adaptation';
@@ -91,6 +93,10 @@ export const signalDomains = {
   political: {
     label: 'Political',
     categories: ['policy_paralysis', 'legitimacy_erosion'] as SignalCategory[]
+  },
+  price: {
+    label: 'Price',
+    categories: ['deflationary_pressure'] as SignalCategory[]
   },
   adaptation: {
     label: 'Adaptation',
@@ -176,5 +182,11 @@ export const signalCategoryMeta: Record<SignalCategory, {
     description: 'System flexibility and reform implementation',
     affectedNodes: ['labor', 'fiscal'],
     isAccelerating: false
+  },
+  deflationary_pressure: {
+    label: 'Deflationary Pressure',
+    description: 'AI-driven price collapse squeezing margins and fiscal revenue while boosting consumer purchasing power',
+    affectedNodes: ['capital', 'fiscal', 'consumption'],
+    isAccelerating: true
   }
 };
