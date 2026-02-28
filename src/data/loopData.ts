@@ -72,6 +72,15 @@ export const loopNodes: LoopNode[] = [
     category: 'capital',
     intensity: 0.5,
     trend: 'up'
+  },
+  {
+    id: 'prices',
+    label: 'Deflationary Pressure',
+    shortLabel: 'Prices',
+    description: 'AI-driven cost collapse eroding margins and fiscal revenue while boosting consumer purchasing power',
+    category: 'price',
+    intensity: 0.5,
+    trend: 'down'
   }
 ];
 
@@ -86,7 +95,12 @@ export const loopConnections: LoopConnection[] = [
   { from: 'fiscal', to: 'ai', type: 'reinforcing', strength: 0.5, description: 'Fiscal pressure drives automation' },
   { from: 'ai', to: 'capital', type: 'reinforcing', strength: 0.8, description: 'AI profits flow to owners' },
   { from: 'capital', to: 'ai', type: 'reinforcing', strength: 0.7, description: 'Capital funds more AI development' },
-  { from: 'capital', to: 'consumption', type: 'balancing', strength: 0.3, description: 'Wealthy consume less proportionally' }
+  { from: 'capital', to: 'consumption', type: 'balancing', strength: 0.3, description: 'Wealthy consume less proportionally' },
+  // Deflation connections
+  { from: 'ai', to: 'prices', type: 'reinforcing', strength: 0.75, description: 'AI drives costs toward zero' },
+  { from: 'prices', to: 'capital', type: 'reinforcing', strength: 0.7, description: 'Falling prices squeeze corporate margins' },
+  { from: 'prices', to: 'fiscal', type: 'reinforcing', strength: 0.65, description: 'Deflation shrinks nominal GDP and tax receipts' },
+  { from: 'prices', to: 'consumption', type: 'balancing', strength: 0.6, description: 'Lower prices boost real purchasing power' }
 ];
 
 export const countryScenarios: CountryScenario[] = [

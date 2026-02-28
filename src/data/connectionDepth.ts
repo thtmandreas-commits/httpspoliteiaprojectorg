@@ -87,6 +87,34 @@ export const connectionDepthData: Record<string, Omit<LinkDepthData, 'connection
     sensitivity: 'low',
     amplifiers: ['Wealth hoarding', 'Asset inflation'],
     dampeners: ['Luxury spending', 'Philanthropy']
+  },
+  'ai->prices': {
+    name: 'Cost Collapse',
+    effectType: 'reinforcing',
+    sensitivity: 'high',
+    amplifiers: ['Zero marginal cost dynamics', 'Open-source AI', 'Commoditization'],
+    dampeners: ['IP moats', 'Regulatory barriers', 'Brand premiums']
+  },
+  'prices->capital': {
+    name: 'Margin Squeeze',
+    effectType: 'reinforcing',
+    sensitivity: 'high',
+    amplifiers: ['Price wars', 'Overcapacity', 'Commoditization'],
+    dampeners: ['Differentiation', 'Cost leadership', 'New market creation']
+  },
+  'prices->fiscal': {
+    name: 'Nominal Revenue Erosion',
+    effectType: 'reinforcing',
+    sensitivity: 'medium',
+    amplifiers: ['Consumption tax reliance', 'Debt burden amplification'],
+    dampeners: ['Volume growth', 'Tax base broadening']
+  },
+  'prices->consumption': {
+    name: 'Real Purchasing Power Boost',
+    effectType: 'balancing',
+    sensitivity: 'medium',
+    amplifiers: ['Essentials deflation', 'Service cost drops'],
+    dampeners: ['Deflationary expectations', 'Delayed spending']
   }
 };
 
