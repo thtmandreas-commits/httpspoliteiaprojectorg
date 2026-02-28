@@ -3,6 +3,7 @@ import { LoopNode, LoopConnection } from '@/types/simulation';
 import { LoopNodeComponent } from './LoopNode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AggregatedSignal, signalCategoryMeta } from '@/types/signals';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface LoopDiagramProps {
   nodes: LoopNode[];
@@ -154,17 +155,35 @@ export function LoopDiagram({ nodes, connections, className, aggregatedSignals =
         </svg>
 
         {/* Nodes */}
-        {nodes.map(node => (
-          <LoopNodeComponent
-            key={node.id}
-            node={node}
-            position={nodePositions[node.id]}
-            isActive={selectedNode === node.id}
-            onClick={() => setSelectedNode(selectedNode === node.id ? null : node.id)}
-            stressLevel={nodeStressLevels[node.id] || 0}
-            uncertainty={nodeUncertainty[node.id] || 0}
-          />
-        ))}
+        {nodes.map(node => {
+          const nodeEl = (
+            <LoopNodeComponent
+              key={node.id}
+              node={node}
+              position={nodePositions[node.id]}
+              isActive={selectedNode === node.id}
+              onClick={() => setSelectedNode(selectedNode === node.id ? null : node.id)}
+              stressLevel={nodeStressLevels[node.id] || 0}
+              uncertainty={nodeUncertainty[node.id] || 0}
+            />
+          );
+
+          if (node.id === 'prices') {
+            return (
+              <TooltipProvider key={node.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>{nodeEl}</TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-[220px] text-xs">
+                    <p className="font-semibold mb-1">Debt-Deflation Spiral</p>
+                    <p className="text-muted-foreground">When prices fall, the real value of debt rises — people owe more in purchasing-power terms, squeezing their income and spending further.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            );
+          }
+
+          return nodeEl;
+        })}
 
         {/* Center indicator */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
