@@ -46,6 +46,7 @@ const validCategories: SignalCategory[] = [
   'welfare_system_strain',
   'policy_paralysis',
   'legitimacy_erosion',
+  'deflationary_pressure',
   'redistribution_experimentation',
   'structural_adaptation'
 ];

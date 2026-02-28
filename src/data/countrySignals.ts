@@ -33,7 +33,8 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
       policy_paralysis: { score: 0.6, trend: 'stable' },
       legitimacy_erosion: { score: 0.3, trend: 'stable' },
       redistribution_experimentation: { score: 0.4, trend: 'stable' },
-      structural_adaptation: { score: 0.3, trend: 'down' }
+      structural_adaptation: { score: 0.3, trend: 'down' },
+      deflationary_pressure: { score: 0.6, trend: 'up' }
     },
     riskFactors: ['World\'s oldest population', 'Debt-to-GDP 260%', 'Labor shortage crisis'],
     stabilizingFactors: ['High automation readiness', 'Strong social cohesion']
@@ -56,7 +57,8 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
       policy_paralysis: { score: 0.5, trend: 'stable' },
       legitimacy_erosion: { score: 0.4, trend: 'up' },
       redistribution_experimentation: { score: 0.3, trend: 'stable' },
-      structural_adaptation: { score: 0.25, trend: 'down' }
+      structural_adaptation: { score: 0.25, trend: 'down' },
+      deflationary_pressure: { score: 0.55, trend: 'up' }
     },
     riskFactors: ['0.7 fertility rate', 'Chaebol concentration', 'Youth unemployment'],
     stabilizingFactors: ['Tech infrastructure', 'Education investment']
@@ -79,7 +81,8 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
       policy_paralysis: { score: 0.3, trend: 'stable' },
       legitimacy_erosion: { score: 0.35, trend: 'stable' },
       redistribution_experimentation: { score: 0.5, trend: 'up' },
-      structural_adaptation: { score: 0.6, trend: 'stable' }
+      structural_adaptation: { score: 0.6, trend: 'stable' },
+      deflationary_pressure: { score: 0.5, trend: 'up' }
     },
     riskFactors: ['Demographic cliff by 2030', 'Property market stress', 'Youth employment crisis'],
     stabilizingFactors: ['State capacity', 'AI investment scale', 'Manufacturing base']
@@ -102,7 +105,8 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
       policy_paralysis: { score: 0.5, trend: 'stable' },
       legitimacy_erosion: { score: 0.45, trend: 'stable' },
       redistribution_experimentation: { score: 0.6, trend: 'up' },
-      structural_adaptation: { score: 0.55, trend: 'up' }
+      structural_adaptation: { score: 0.55, trend: 'up' },
+      deflationary_pressure: { score: 0.35, trend: 'stable' }
     },
     riskFactors: ['Fragmented policy', 'Slow innovation adoption', 'Pension obligations'],
     stabilizingFactors: ['Strong welfare systems', 'Immigration buffer', 'AI regulation']
@@ -125,7 +129,8 @@ export const countrySignalProfiles: CountrySignalProfile[] = [
       policy_paralysis: { score: 0.7, trend: 'up' },
       legitimacy_erosion: { score: 0.6, trend: 'up' },
       redistribution_experimentation: { score: 0.35, trend: 'stable' },
-      structural_adaptation: { score: 0.4, trend: 'stable' }
+      structural_adaptation: { score: 0.4, trend: 'stable' },
+      deflationary_pressure: { score: 0.7, trend: 'up' }
     },
     riskFactors: ['Wealth inequality', 'Weak safety nets', 'Healthcare costs'],
     stabilizingFactors: ['Tech leadership', 'Immigration', 'Capital markets depth']
