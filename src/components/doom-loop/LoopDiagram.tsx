@@ -13,9 +13,9 @@ interface LoopDiagramProps {
 
 export function LoopDiagram({ nodes, connections, className, aggregatedSignals = [] }: LoopDiagramProps) {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const size = 320;
+  const size = 340;
   const center = size / 2;
-  const radius = 120;
+  const radius = 130;
 
   const nodePositions = useMemo(() => {
     const positions: Record<string, { x: number; y: number }> = {};

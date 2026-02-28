@@ -11,7 +11,7 @@ export interface LoopNode {
   label: string;
   shortLabel: string;
   description: string;
-  category: 'ai' | 'labor' | 'demographic' | 'fiscal' | 'capital';
+  category: 'ai' | 'labor' | 'demographic' | 'fiscal' | 'capital' | 'price';
   intensity: number;
   trend: 'up' | 'down' | 'neutral';
 }

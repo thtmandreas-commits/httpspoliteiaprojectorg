@@ -16,7 +16,8 @@ const categoryColors: Record<string, string> = {
   labor: 'border-node-labor bg-node-labor/10 text-node-labor',
   demographic: 'border-node-demographic bg-node-demographic/10 text-node-demographic',
   fiscal: 'border-node-fiscal bg-node-fiscal/10 text-node-fiscal',
-  capital: 'border-node-capital bg-node-capital/10 text-node-capital'
+  capital: 'border-node-capital bg-node-capital/10 text-node-capital',
+  price: 'border-primary bg-primary/10 text-primary'
 };
 
 const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'neutral' }) => {
