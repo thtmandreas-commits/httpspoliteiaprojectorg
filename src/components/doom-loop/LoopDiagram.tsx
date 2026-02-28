@@ -5,6 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AggregatedSignal, signalCategoryMeta } from '@/types/signals';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
+const nodeTooltips: Record<string, { title: string; body: string }> = {
+  ai: { title: 'The Automation Engine', body: 'AI systems increasingly handle tasks once done by humans — from coding to driving — accelerating every other pressure in the loop.' },
+  labor: { title: 'The Jobs Squeeze', body: 'As machines take over tasks, demand for human workers drops. Entire occupations can shrink faster than new ones emerge.' },
+  income: { title: 'The Wage Trap', body: 'When jobs vanish or shift to lower-paid work, household earnings fall — leaving less room for saving, spending, or starting families.' },
+  consumption: { title: 'The Spending Slowdown', body: 'People with less money buy less. That means fewer sales, lower profits, and shrinking tax revenue — a drag on the whole economy.' },
+  fertility: { title: 'The Baby Bust', body: 'Economic insecurity makes people delay or forgo having children. This isn\'t just personal — it reshapes entire societies within a generation.' },
+  aging: { title: 'The Grey Wave', body: 'Fewer births plus longer lives means a rising share of retirees. Each working-age person supports more dependents over time.' },
+  fiscal: { title: 'The Budget Crunch', body: 'Governments collect less tax while spending more on pensions and healthcare. The gap grows until something gives.' },
+  capital: { title: 'The Wealth Divide', body: 'AI profits flow to those who own the machines and data. The rich get richer while workers\' share of the pie shrinks.' },
+  prices: { title: 'Debt-Deflation Spiral', body: 'When prices fall, the real value of debt rises — people owe more in purchasing-power terms, squeezing their income and spending further.' },
+};
+
 interface LoopDiagramProps {
   nodes: LoopNode[];
   connections: LoopConnection[];
@@ -168,21 +180,20 @@ export function LoopDiagram({ nodes, connections, className, aggregatedSignals =
             />
           );
 
-          if (node.id === 'prices') {
-            return (
-              <TooltipProvider key={node.id}>
-                <Tooltip>
-                  <TooltipTrigger asChild>{nodeEl}</TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-[220px] text-xs">
-                    <p className="font-semibold mb-1">Debt-Deflation Spiral</p>
-                    <p className="text-muted-foreground">When prices fall, the real value of debt rises — people owe more in purchasing-power terms, squeezing their income and spending further.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            );
-          }
+          const tip = nodeTooltips[node.id];
+          if (!tip) return nodeEl;
 
-          return nodeEl;
+          return (
+            <TooltipProvider key={node.id}>
+              <Tooltip>
+                <TooltipTrigger asChild>{nodeEl}</TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-[220px] text-xs">
+                  <p className="font-semibold mb-1">{tip.title}</p>
+                  <p className="text-muted-foreground">{tip.body}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
         })}
 
         {/* Center indicator */}
