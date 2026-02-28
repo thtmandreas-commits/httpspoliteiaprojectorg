@@ -55,6 +55,7 @@ export function useLiveSignals() {
   const [lastFetched, setLastFetched] = useState<number | null>(null);
   const [liveSignals, setLiveSignals] = useState<Signal[]>([]);
   const [feedStats, setFeedStats] = useState<FeedStats | null>(null);
+  const [totalScanned, setTotalScanned] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
   const fetchLiveSignals = useCallback(async () => {
@@ -89,6 +90,7 @@ export function useLiveSignals() {
 
       setLiveSignals(signals);
       setLastFetched(response.timestamp);
+      setTotalScanned(response.totalItemsScanned);
       if (response.feedStats) {
         setFeedStats(response.feedStats);
       }
@@ -116,6 +118,7 @@ export function useLiveSignals() {
     isLoading,
     lastFetched,
     feedStats,
+    totalScanned,
     error,
     fetchLiveSignals,
   };
