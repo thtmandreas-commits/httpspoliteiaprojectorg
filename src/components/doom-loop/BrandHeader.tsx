@@ -22,7 +22,7 @@ export function BrandHeader({
           fontStretch: 'condensed'
         }}
       >
-        DOOM LOOP
+        THE GREAT DOOM LOOP
       </h1>
       
       {/* Subtitle */}
