@@ -100,7 +100,9 @@ export const loopConnections: LoopConnection[] = [
   { from: 'ai', to: 'prices', type: 'reinforcing', strength: 0.75, description: 'AI drives costs toward zero' },
   { from: 'prices', to: 'capital', type: 'reinforcing', strength: 0.7, description: 'Falling prices squeeze corporate margins' },
   { from: 'prices', to: 'fiscal', type: 'reinforcing', strength: 0.65, description: 'Deflation shrinks nominal GDP and tax receipts' },
-  { from: 'prices', to: 'consumption', type: 'balancing', strength: 0.6, description: 'Lower prices boost real purchasing power' }
+  { from: 'prices', to: 'consumption', type: 'balancing', strength: 0.6, description: 'Lower prices boost real purchasing power' },
+  // Debt-deflation spiral
+  { from: 'prices', to: 'income', type: 'reinforcing', strength: 0.6, description: 'Deflation raises real debt burden, crushing disposable income' }
 ];
 
 export const countryScenarios: CountryScenario[] = [

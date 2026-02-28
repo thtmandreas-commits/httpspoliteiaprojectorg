@@ -115,6 +115,13 @@ export const connectionDepthData: Record<string, Omit<LinkDepthData, 'connection
     sensitivity: 'medium',
     amplifiers: ['Essentials deflation', 'Service cost drops'],
     dampeners: ['Deflationary expectations', 'Delayed spending']
+  },
+  'prices->income': {
+    name: 'Debt-Deflation Spiral',
+    effectType: 'reinforcing',
+    sensitivity: 'high',
+    amplifiers: ['High household debt', 'Fixed-rate obligations', 'Mortgage burden'],
+    dampeners: ['Debt relief programs', 'Inflation targeting', 'Variable rate adjustment']
   }
 };
 
