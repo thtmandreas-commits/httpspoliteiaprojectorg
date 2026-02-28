@@ -15,7 +15,8 @@ const categoryColors: Record<string, string> = {
   labor: 'border-l-[hsl(var(--node-labor))]',
   demographic: 'border-l-[hsl(var(--node-demographic))]',
   fiscal: 'border-l-[hsl(var(--node-fiscal))]',
-  capital: 'border-l-[hsl(var(--node-capital))]'
+  capital: 'border-l-[hsl(var(--node-capital))]',
+  price: 'border-l-[hsl(var(--primary))]'
 };
 
 const TrendIcon = ({ trend, stressed }: { trend: 'up' | 'down' | 'neutral'; stressed?: boolean }) => {

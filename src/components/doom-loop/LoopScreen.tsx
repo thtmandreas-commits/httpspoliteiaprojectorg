@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react';
 import { SimulationParams, LoopNode } from '@/types/simulation';
-import { AggregatedSignal } from '@/types/signals';
+import { AggregatedSignal, signalCategoryMeta } from '@/types/signals';
+import { Card, CardContent } from '@/components/ui/card';
 import { LoopCard } from './LoopCard';
 import { LoopConnectionLink } from './LoopConnectionLink';
 import { SensitivityToggle } from './SensitivityToggle';
 import { TensionGauge } from './TensionGauge';
-import { signalCategoryMeta } from '@/types/signals';
+import { TrendingDown, TrendingUp, Minus, Info } from 'lucide-react';
 
 interface LoopScreenProps {
   nodes: LoopNode[];
@@ -86,6 +87,7 @@ export function LoopScreen({
     nodes.find(n => n.id === 'aging'),
     nodes.find(n => n.id === 'fiscal'),
     nodes.find(n => n.id === 'capital'),
+    nodes.find(n => n.id === 'prices'),
   ].filter(Boolean) as LoopNode[];
 
   // Calculate node stress levels from signals
@@ -159,7 +161,50 @@ export function LoopScreen({
         </div>
       </div>
 
-      {/* Sensitivity Controls */}
+      {/* Deflation Dual-Effect Explainer */}
+      <Card className="border-l-4 border-l-primary bg-primary/5">
+        <CardContent className="p-3">
+          <div className="flex items-start gap-2">
+            <Info className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+            <div className="space-y-2">
+              <h4 className="text-xs font-semibold text-foreground">
+                Deflation: The Double-Edged Catalyst
+              </h4>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                AI-driven deflation is unique in the loop — it simultaneously <span className="text-flow-accelerating font-medium">destabilizes</span> and <span className="text-flow-stabilizing font-medium">stabilizes</span> different parts of the system.
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1 text-[10px] font-semibold text-flow-accelerating">
+                    <TrendingUp className="w-3 h-3" />
+                    Destabilizing
+                  </div>
+                  <ul className="text-[10px] text-muted-foreground space-y-0.5 pl-4">
+                    <li className="list-disc">Squeezes corporate margins</li>
+                    <li className="list-disc">Shrinks nominal tax revenue</li>
+                    <li className="list-disc">Amplifies real debt burden</li>
+                  </ul>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1 text-[10px] font-semibold text-flow-stabilizing">
+                    <TrendingDown className="w-3 h-3" />
+                    Stabilizing
+                  </div>
+                  <ul className="text-[10px] text-muted-foreground space-y-0.5 pl-4">
+                    <li className="list-disc">Boosts real purchasing power</li>
+                    <li className="list-disc">Offsets wage compression</li>
+                    <li className="list-disc">Lowers cost of essentials</li>
+                  </ul>
+                </div>
+              </div>
+              <p className="text-[9px] text-muted-foreground/60 italic">
+                Who wins depends on where you sit: capital owners and governments face pressure; consumers with stable income benefit.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="pt-4 border-t border-border/50 space-y-4">
         <div className="space-y-1">
           <h3 className="text-sm font-semibold text-foreground/90">Test Sensitivity</h3>
