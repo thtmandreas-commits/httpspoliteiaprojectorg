@@ -67,7 +67,7 @@ const Index = () => {
                 className="text-sm font-bold tracking-[0.1em] uppercase"
                 style={{ color: 'hsl(var(--brand-title))' }}
               >
-                DOOM LOOP
+                THE GREAT DOOM LOOP
               </h1>
             </div>
           )}
