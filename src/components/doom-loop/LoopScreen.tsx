@@ -26,11 +26,12 @@ const nodeSequence = [
   { id: 'ai', connectsTo: 'labor' },
   { id: 'labor', connectsTo: 'income' },
   { id: 'income', connectsTo: 'consumption' },
-  { id: 'consumption', connectsTo: 'fertility' },  // via fiscal path
+  { id: 'consumption', connectsTo: 'fertility' },
   { id: 'fertility', connectsTo: 'aging' },
   { id: 'aging', connectsTo: 'fiscal' },
-  { id: 'fiscal', connectsTo: 'capital' },  // loops back through ai
-  { id: 'capital', connectsTo: null },  // end of main sequence
+  { id: 'fiscal', connectsTo: 'capital' },
+  { id: 'capital', connectsTo: 'prices' },
+  { id: 'prices', connectsTo: null },
 ];
 
 // Calculate node stress from signals
