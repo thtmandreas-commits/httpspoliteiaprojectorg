@@ -31,7 +31,7 @@ export function BrandHeader({
           className="text-[10px] tracking-[0.25em] uppercase mt-0.5"
           style={{ color: 'hsl(var(--brand-subtitle))' }}
         >
-          A systems view of AI, work, and society
+          The feedback loop reshaping labor, capital, and civilization
         </p>
       )}
       
