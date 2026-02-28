@@ -88,6 +88,13 @@ export const connectionDepthData: Record<string, Omit<LinkDepthData, 'connection
     amplifiers: ['Wealth hoarding', 'Asset inflation'],
     dampeners: ['Luxury spending', 'Philanthropy']
   },
+  'capital->prices': {
+    name: 'Automation-Driven Deflation',
+    effectType: 'reinforcing',
+    sensitivity: 'medium',
+    amplifiers: ['Scale economies', 'AI investment surge', 'Market concentration'],
+    dampeners: ['Pricing power', 'Brand moats', 'Regulatory floors']
+  },
   'ai->prices': {
     name: 'Cost Collapse',
     effectType: 'reinforcing',

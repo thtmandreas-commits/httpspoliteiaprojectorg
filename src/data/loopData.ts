@@ -97,6 +97,7 @@ export const loopConnections: LoopConnection[] = [
   { from: 'capital', to: 'ai', type: 'reinforcing', strength: 0.7, description: 'Capital funds more AI development' },
   { from: 'capital', to: 'consumption', type: 'balancing', strength: 0.3, description: 'Wealthy consume less proportionally' },
   // Deflation connections
+  { from: 'capital', to: 'prices', type: 'reinforcing', strength: 0.6, description: 'Concentrated capital drives automation that collapses costs' },
   { from: 'ai', to: 'prices', type: 'reinforcing', strength: 0.75, description: 'AI drives costs toward zero' },
   { from: 'prices', to: 'capital', type: 'reinforcing', strength: 0.7, description: 'Falling prices squeeze corporate margins' },
   { from: 'prices', to: 'fiscal', type: 'reinforcing', strength: 0.65, description: 'Deflation shrinks nominal GDP and tax receipts' },
