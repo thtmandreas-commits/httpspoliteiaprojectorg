@@ -13,7 +13,7 @@ interface LiveSignalFetcherProps {
 }
 
 export function LiveSignalFetcher({ onSignalsReceived }: LiveSignalFetcherProps) {
-  const { isLoading, lastFetched, error, fetchLiveSignals, liveSignals, feedStats } = useLiveSignals();
+  const { isLoading, lastFetched, error, fetchLiveSignals, liveSignals, feedStats, totalScanned } = useLiveSignals();
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [nextRefreshIn, setNextRefreshIn] = useState<number | null>(null);
 
@@ -148,9 +148,16 @@ export function LiveSignalFetcher({ onSignalsReceived }: LiveSignalFetcherProps)
         {liveSignals.length > 0 && !error && (
           <div className="mt-2 pt-2 border-t space-y-2">
             <div className="flex items-center justify-between text-[10px]">
-              <span className="text-muted-foreground">
-                {liveSignals.length} signals ingested
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">
+                  {liveSignals.length} signals ingested
+                </span>
+                {totalScanned > 0 && (
+                  <span className="text-muted-foreground/70">
+                    · {Math.round((liveSignals.length / totalScanned) * 100)}% hit rate
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-1 text-flow-stabilizing">
                 <Wifi className="w-3 h-3" />
                 <span>{autoRefresh ? 'Auto-connected' : 'Connected'}</span>
